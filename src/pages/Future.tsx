@@ -42,6 +42,65 @@ import {
   Drawer,
 } from "../components/ui";
 
+type ProjectionTooltipEntry = {
+  payload?: {
+    stock?: number;
+    need?: number;
+    incoming?: number | null;
+  };
+};
+
+function ProjectionTooltip({
+  active,
+  payload,
+  label,
+  unit,
+}: {
+  active?: boolean;
+  payload?: ProjectionTooltipEntry[];
+  label?: string | number;
+  unit: string;
+}) {
+  if (!active || !payload?.length) return null;
+
+  const point = payload[0]?.payload;
+  const stock = Number(point?.stock ?? 0);
+  const need = Number(point?.need ?? 0);
+  const incoming = Number(point?.incoming ?? 0);
+  const balance = Math.round((stock - need + Number.EPSILON) * 1e6) / 1e6;
+
+  const rowStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 18,
+    alignItems: "center",
+  } as const;
+
+  return (
+    <div style={{ ...tooltipStyle, padding: "10px 12px", minWidth: 220 }}>
+      <div style={{ marginBottom: 7, color: "#9ba9a1", fontSize: 11 }}>{label}</div>
+      <div style={rowStyle}>
+        <span style={{ color: "#9fb8ff" }}>Estoque disponível</span>
+        <strong>{number(stock)} {unit}</strong>
+      </div>
+      <div style={rowStyle}>
+        <span style={{ color: "#86efac" }}>Necessidade acumulada</span>
+        <strong>{number(need)} {unit}</strong>
+      </div>
+      <div style={{ ...rowStyle, marginTop: 5, paddingTop: 5, borderTop: "1px solid rgba(196, 255, 222, 0.12)" }}>
+        <span style={{ color: balance < 0 ? "#fda4af" : "#c4ffde" }}>Saldo de estoque</span>
+        <strong style={{ color: balance < 0 ? "#fda4af" : "#c4ffde" }}>{number(balance)} {unit}</strong>
+      </div>
+      {incoming > 0 && (
+        <div style={{ ...rowStyle, marginTop: 4 }}>
+          <span style={{ color: "#fbbf24" }}>Entrada FOLLOW UP</span>
+          <strong>{number(incoming)} {unit}</strong>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Composition({
   rows,
   highlightDates,
@@ -558,17 +617,7 @@ export default function Future() {
                     <CartesianGrid vertical={false} stroke="rgba(196, 255, 222, 0.08)" strokeDasharray="3 5" />
                     <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: "#78877f", fontSize: 11 }} />
                     <YAxis tickFormatter={(value) => number(Number(value))} axisLine={false} tickLine={false} tick={{ fill: "#78877f", fontSize: 11 }} width={60} />
-                    <Tooltip
-                      contentStyle={tooltipStyle}
-                      formatter={(value, name) => [
-                        `${number(Number(value))} ${active.unit}`,
-                        name === "need"
-                          ? "Necessidade acumulada"
-                          : name === "stock"
-                            ? "Estoque disponível"
-                            : "Entrada FOLLOW UP",
-                      ]}
-                    />
+                    <Tooltip content={<ProjectionTooltip unit={active.unit} />} />
                     <ReferenceLine y={0} stroke="rgba(255, 255, 255, 0.18)" strokeDasharray="3 5" />
                     {ruptureRanges.map((range, index) => (
                       <ReferenceArea
