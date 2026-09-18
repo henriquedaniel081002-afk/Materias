@@ -685,11 +685,13 @@ export function Detail({
   );
 }
 export const tooltipStyle = {
-  background: "#1b2428",
-  border: "1px solid #3a494e",
-  borderRadius: 8,
-  color: "#e8eef0",
-  fontSize: 13,
+  background: "rgba(8, 14, 10, 0.97)",
+  border: "1px solid rgba(196, 255, 222, 0.16)",
+  borderRadius: 12,
+  color: "#f5f8f6",
+  fontSize: 12,
+  boxShadow: "0 18px 48px rgba(0, 0, 0, 0.42)",
+  backdropFilter: "blur(12px)",
 };
 
 function DateInput({

@@ -555,9 +555,9 @@ export default function Future() {
               {timeline.length ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={timeline} margin={{ top: rupturePoint ? 30 : 14, right: 30, left: 8, bottom: 4 }}>
-                    <CartesianGrid vertical={false} stroke="#263034" strokeDasharray="3 4" />
-                    <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: "#94a3a9", fontSize: 12 }} />
-                    <YAxis tickFormatter={(value) => number(Number(value))} axisLine={false} tickLine={false} tick={{ fill: "#94a3a9", fontSize: 12 }} width={60} />
+                    <CartesianGrid vertical={false} stroke="rgba(196, 255, 222, 0.08)" strokeDasharray="3 5" />
+                    <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: "#78877f", fontSize: 11 }} />
+                    <YAxis tickFormatter={(value) => number(Number(value))} axisLine={false} tickLine={false} tick={{ fill: "#78877f", fontSize: 11 }} width={60} />
                     <Tooltip
                       contentStyle={tooltipStyle}
                       formatter={(value, name) => [
@@ -569,14 +569,14 @@ export default function Future() {
                             : "Entrada FOLLOW UP",
                       ]}
                     />
-                    <ReferenceLine y={0} stroke="#435159" strokeDasharray="3 4" />
+                    <ReferenceLine y={0} stroke="rgba(255, 255, 255, 0.18)" strokeDasharray="3 5" />
                     {ruptureRanges.map((range, index) => (
                       <ReferenceArea
                         key={`rupture-range-${index}-${range.start}`}
                         x1={range.start}
                         x2={range.end}
-                        fill="#ef4444"
-                        fillOpacity={0.07}
+                        fill="#fb7185"
+                        fillOpacity={0.055}
                         strokeOpacity={0}
                       />
                     ))}
@@ -584,7 +584,7 @@ export default function Future() {
                       <ReferenceLine
                         key={`rupture-${point.iso}`}
                         x={point.day}
-                        stroke="#ef6b73"
+                        stroke="#fb7185"
                         strokeWidth={1.5}
                         strokeDasharray="4 4"
                         label={{
@@ -592,7 +592,7 @@ export default function Future() {
                             ? `Ruptura ${index + 1} · ${point.day}`
                             : `Ruptura ${point.day}`,
                           position: index % 2 === 0 ? "insideTopRight" : "insideBottomRight",
-                          fill: "#ff9aa1",
+                          fill: "#fda4af",
                           fontSize: 11,
                         }}
                       />
@@ -612,15 +612,15 @@ export default function Future() {
                             cx={cx}
                             cy={cy}
                             r={5}
-                            fill="#60d6a7"
-                            stroke="#141d21"
+                            fill="#fbbf24"
+                            stroke="#06100a"
                             strokeWidth={2}
                           />
                         );
                       }}
                       activeDot={false}
-                      stroke="#96aaa4"
-                      strokeWidth={1.5}
+                      stroke="#60a5fa"
+                      strokeWidth={1.8}
                       strokeDasharray="6 5"
                     />
                     <Line
@@ -639,13 +639,13 @@ export default function Future() {
                             cx={cx}
                             cy={cy}
                             r={isRupture ? 5 : 3}
-                            fill={isRupture ? "#ef6b73" : "#39d9a0"}
-                            stroke="#141d21"
+                            fill={isRupture ? "#fb7185" : "#34d399"}
+                            stroke="#06100a"
                             strokeWidth={2}
                           />
                         );
                       }}
-                      stroke="#39d9a0"
+                      stroke="#34d399"
                       strokeWidth={2.5}
                     />
                     <Line dataKey="incoming" dot={false} activeDot={false} stroke="transparent" />

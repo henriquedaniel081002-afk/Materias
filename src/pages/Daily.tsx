@@ -364,19 +364,19 @@ export default function Daily() {
             <div className="chart">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={evolution} margin={{ top: 30, right: 18, left: 0, bottom: 0 }}>
-                  <CartesianGrid stroke="#263034" vertical={false} strokeDasharray="3 4" />
+                  <CartesianGrid stroke="rgba(196, 255, 222, 0.08)" vertical={false} strokeDasharray="3 5" />
                   <XAxis
                     dataKey="day"
                     tickLine={false}
                     axisLine={false}
-                    tick={{ fill: "#94a3a9", fontSize: 12 }}
+                    tick={{ fill: "#78877f", fontSize: 11 }}
                     minTickGap={25}
                   />
                   <YAxis
                     tickFormatter={(value) => number(Number(value))}
                     tickLine={false}
                     axisLine={false}
-                    tick={{ fill: "#94a3a9", fontSize: 12 }}
+                    tick={{ fill: "#78877f", fontSize: 11 }}
                     width={54}
                   />
                   <Tooltip
@@ -386,15 +386,15 @@ export default function Daily() {
                   <Line
                     type="linear"
                     dataKey="value"
-                    stroke="#39d9a0"
+                    stroke="#34d399"
                     strokeWidth={2.5}
                     dot={false}
-                    activeDot={{ r: 5, stroke: "#0c1012", strokeWidth: 3 }}
+                    activeDot={{ r: 5, fill: "#34d399", stroke: "#06100a", strokeWidth: 3 }}
                   >
                     <LabelList
                       dataKey="value"
                       position="top"
-                      fill="#c6d2d5"
+                      fill="#aab8b0"
                       fontSize={10}
                       formatter={(value: number) => number(Number(value))}
                     />
@@ -422,10 +422,10 @@ export default function Daily() {
                     tickLine={false}
                     axisLine={false}
                     width={57}
-                    tick={{ fill: "#c5d0d4", fontSize: 12 }}
+                    tick={{ fill: "#aab8b0", fontSize: 11 }}
                   />
                   <Tooltip
-                    cursor={{ fill: "#263134" }}
+                    cursor={{ fill: "rgba(52, 211, 153, 0.055)" }}
                     contentStyle={tooltipStyle}
                     formatter={(value) => [`${number(Number(value))} ${unit}`, "Consumo"]}
                     labelFormatter={(value) => {
@@ -435,13 +435,13 @@ export default function Daily() {
                   />
                   <Bar
                     dataKey="value"
-                    fill="#28b98b"
-                    radius={[0, 3, 3, 0]}
-                    barSize={17}
+                    fill="#34d399"
+                    radius={[0, 7, 7, 0]}
+                    barSize={15}
                     label={{
                       position: "right",
-                      fill: "#c6d2d5",
-                      fontSize: 12,
+                      fill: "#aab8b0",
+                      fontSize: 11,
                       formatter: (value: number) => number(value),
                     }}
                   />
