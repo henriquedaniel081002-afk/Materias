@@ -53,10 +53,12 @@ const businessDaysBeforeFinalAssembly: Record<string, number> = {
 export function calculateNeedDate(
   finalAssemblyDate: string | null | undefined,
   sector: string | null | undefined,
+  cascadeEnabled = true,
 ): string | null {
   if (!finalAssemblyDate) return null;
 
   const iso = finalAssemblyDate.slice(0, 10);
+  if (!cascadeEnabled) return iso;
   const leadDays = businessDaysBeforeFinalAssembly[normalized(sector)] ?? 0;
   if (leadDays <= 0) return iso;
 
@@ -116,6 +118,7 @@ export function defaultFutureFilters(rows: PlannedDemand[]): Filters {
 export function createDailyConsumption(
   apontamento: ApontamentoRow[],
   ficha: FichaTecnicaRow[],
+  plano: PlanoRow[] = [],
 ): DailyConsumption[] {
   const byReferenceSector = new Map<string, FichaTecnicaRow[]>();
   for (const row of ficha) {
@@ -125,10 +128,20 @@ export function createDailyConsumption(
     byReferenceSector.set(key, list);
   }
 
+  const planByOp = new Map<string, PlanoRow>();
+  for (const row of plano) {
+    if (!row.op) continue;
+    const key = joinKey(row.op, row.referencia);
+    if (!planByOp.has(key)) planByOp.set(key, row);
+  }
+
   const result: DailyConsumption[] = [];
   for (const production of apontamento) {
     const rows = byReferenceSector.get(joinKey(production.referencia, production.setor));
     if (!rows?.length) continue;
+    const planInfo = production.op
+      ? planByOp.get(joinKey(production.op, production.referencia))
+      : undefined;
     for (const material of rows) {
       const produced = Number(production.qtd_produzida) || 0;
       const perUnit = Number(material.qtd_por_unidade) || 0;
@@ -137,12 +150,17 @@ export function createDailyConsumption(
           production.data,
           production.referencia,
           production.setor,
+          production.op || "SEM_OP",
           material.cod_mp,
           material.un,
         ].join("¦"),
         date: production.data.slice(0, 10),
         reference: production.referencia,
         sector: production.setor,
+        op: production.op || null,
+        client: planInfo?.cliente || null,
+        order: planInfo?.pedido || null,
+        opTotal: planInfo?.qtd_total_op ?? null,
         materialCode: material.cod_mp,
         materialDescription: material.descricao_mp || "Sem descrição",
         produced,
@@ -158,6 +176,7 @@ export function createDailyConsumption(
 export function createPlannedDemands(
   plano: PlanoRow[],
   ficha: FichaTecnicaRow[],
+  cascadeEnabled = true,
 ): PlannedDemand[] {
   const byReference = new Map<string, FichaTecnicaRow[]>();
   for (const row of ficha) {
@@ -174,18 +193,23 @@ export function createPlannedDemands(
     for (const material of rows) {
       const planned = Number(plan.qtd_planejada) || 0;
       const perUnit = Number(material.qtd_por_unidade) || 0;
-      const data = calculateNeedDate(plan.data, material.setor);
+      const data = calculateNeedDate(plan.data, material.setor, cascadeEnabled);
       result.push({
         id: [
           data || "SEM_DATA",
           plan.referencia,
           material.setor,
+          plan.op || "SEM_OP",
           material.cod_mp,
           material.un,
         ].join("¦"),
         date: data,
         reference: plan.referencia,
         sector: material.setor,
+        op: plan.op || null,
+        client: plan.cliente || null,
+        order: plan.pedido || null,
+        opTotal: plan.qtd_total_op ?? null,
         materialCode: material.cod_mp,
         materialDescription: material.descricao_mp || "Sem descrição",
         planned,

@@ -108,35 +108,80 @@ function Composition({
   rows: PlannedDemand[];
   highlightDates?: Set<string>;
 }) {
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selected = rows.find((row) => row.id === selectedId) || null;
+
   return (
-    <div className="table-scroll composition">
-      <table>
-        <thead>
-          <tr>
-            {["Data", "Referência", "Setor", "Qtd. planejada", "Qtd./unidade", "Necessidade"].map((label) => (
-              <th key={label}>{label}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.id} className={row.date && highlightDates?.has(row.date) ? "rupture-row" : ""}>
-              <td>{row.date ? date(row.date) : "Sem data"}</td>
-              <td className="mono">{row.reference}</td>
-              <td>{row.sector}</td>
-              <td className="numeric">{number(row.planned)}</td>
-              <td className="numeric">{number(row.perUnit, 6)}</td>
-              <td className="numeric">{number(row.need)}</td>
+    <div className="composition-with-op">
+      <div className="table-scroll composition">
+        <table>
+          <thead>
+            <tr>
+              {["Data", "Referência", "Setor", "Qtd. planejada", "Qtd./unidade", "Necessidade"].map((label) => (
+                <th key={label}>{label}</th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((row) => {
+              const classes = [
+                row.date && highlightDates?.has(row.date) ? "rupture-row" : "",
+                selectedId === row.id ? "op-row-selected" : "",
+              ].filter(Boolean).join(" ");
+              return (
+                <tr
+                  key={row.id}
+                  className={classes}
+                  onClick={() => setSelectedId(row.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setSelectedId(row.id);
+                    }
+                  }}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Ver dados da OP ${row.op || "não informada"}`}
+                >
+                  <td>{row.date ? date(row.date) : "Sem data"}</td>
+                  <td className="mono">{row.reference}</td>
+                  <td>{row.sector}</td>
+                  <td className="numeric">{number(row.planned)}</td>
+                  <td className="numeric">{number(row.perUnit, 6)}</td>
+                  <td className="numeric">{number(row.need)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p className="composition-click-hint">Clique em uma linha para visualizar os dados da OP.</p>
+      {selected && (
+        <div className="op-detail-card" role="status">
+          <div>
+            <span>OP</span>
+            <strong>{selected.op || "Não informada"}</strong>
+          </div>
+          <div>
+            <span>Qtd. total da OP</span>
+            <strong>{selected.opTotal !== null ? number(selected.opTotal) : "Não informada"}</strong>
+          </div>
+          <div>
+            <span>Cliente</span>
+            <strong>{selected.client || "Não informado"}</strong>
+          </div>
+          <div>
+            <span>Pedido</span>
+            <strong>{selected.order || "Não informado"}</strong>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 export default function Future() {
-  const { plannedDemands, data, version } = useData();
+  const { plannedDemands, data, version, cascadeEnabled, setCascadeEnabled } = useData();
   const [filters, setFilters] = useState(emptyFilters);
   const [selected, setSelected] = useState<FutureMaterialNeed | null>(null);
 
@@ -192,7 +237,11 @@ export default function Future() {
   useEffect(() => {
     setFilters(defaultFutureFilters(plannedDemands));
     setSelected(null);
-  }, [version, plannedDemands]);
+  }, [version]);
+
+  useEffect(() => {
+    setSelected(null);
+  }, [cascadeEnabled]);
 
   useEffect(() => {
     setSelected(null);
@@ -391,6 +440,27 @@ export default function Future() {
         groups={groups}
         units={units}
       />
+
+      <div className={`cascade-control ${cascadeEnabled ? "enabled" : "disabled"}`}>
+        <div className="cascade-copy">
+          <span>CASCATA DE PRODUÇÃO</span>
+          <strong>{cascadeEnabled ? "Ativada" : "Desativada"}</strong>
+          <p>
+            {cascadeEnabled
+              ? "As datas da Montagem Final são antecipadas pelos dias úteis configurados de cada setor."
+              : "Todos os setores usam diretamente a data da Montagem Final, sem antecipação."}
+          </p>
+        </div>
+        <button
+          type="button"
+          className="cascade-toggle"
+          aria-pressed={cascadeEnabled}
+          onClick={() => setCascadeEnabled(!cascadeEnabled)}
+        >
+          <span className="cascade-switch" aria-hidden="true"><i /></span>
+          {cascadeEnabled ? "Desativar Cascata" : "Ativar Cascata"}
+        </button>
+      </div>
 
       <div className="kpis future-kpis">
         <KPI

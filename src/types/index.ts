@@ -3,6 +3,10 @@ export type Unit = string;
 export interface PlanoRow {
   data: string | null;
   referencia: string;
+  op: string | null;
+  cliente: string | null;
+  pedido: string | null;
+  qtd_total_op: number | null;
   qtd_planejada: number;
 }
 
@@ -10,6 +14,7 @@ export interface ApontamentoRow {
   data: string;
   referencia: string;
   setor: string;
+  op: string | null;
   qtd_produzida: number;
 }
 
@@ -46,6 +51,10 @@ export interface DailyConsumption {
   date: string;
   reference: string;
   sector: string;
+  op: string | null;
+  client: string | null;
+  order: string | null;
+  opTotal: number | null;
   materialCode: string;
   materialDescription: string;
   produced: number;
@@ -59,6 +68,10 @@ export interface PlannedDemand {
   date: string | null;
   reference: string;
   sector: string;
+  op: string | null;
+  client: string | null;
+  order: string | null;
+  opTotal: number | null;
   materialCode: string;
   materialDescription: string;
   planned: number;

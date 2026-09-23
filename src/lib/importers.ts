@@ -217,7 +217,14 @@ function findSheetWithHeader(
 function groupPlano(rows: PlanoRow[]) {
   const map = new Map<string, PlanoRow>();
   rows.forEach((row) => {
-    const key = `${row.data || "SEM_DATA"}¦${row.referencia}`;
+    const key = [
+      row.data || "SEM_DATA",
+      row.referencia,
+      row.op || "SEM_OP",
+      row.cliente || "",
+      row.pedido || "",
+      row.qtd_total_op ?? "",
+    ].join("¦");
     const current = map.get(key);
     if (current) current.qtd_planejada += row.qtd_planejada;
     else map.set(key, { ...row });
@@ -231,7 +238,7 @@ function groupPlano(rows: PlanoRow[]) {
 function groupApontamento(rows: ApontamentoRow[]) {
   const map = new Map<string, ApontamentoRow>();
   rows.forEach((row) => {
-    const key = `${row.data}¦${row.referencia}¦${row.setor}`;
+    const key = `${row.data}¦${row.referencia}¦${row.setor}¦${row.op || "SEM_OP"}`;
     const current = map.get(key);
     if (current) current.qtd_produzida += row.qtd_produzida;
     else map.set(key, { ...row });
@@ -299,6 +306,10 @@ export async function parsePlano(file: File): Promise<ImportResult<PlanoRow>> {
   const headerRow = found.rows[found.header];
   const refIndex = headerIndex(headerRow, ["Referência", "COD. REFERÊNCIA", "COD REFERENCIA"]);
   const simplifiedQtyIndex = headerIndex(headerRow, ["Qtd Planejada"]);
+  const opIndex = headerIndex(headerRow, ["OP"]);
+  const clientIndex = headerIndex(headerRow, ["Cliente"]);
+  const orderIndex = headerIndex(headerRow, ["Pedido"]);
+  const opTotalIndex = headerIndex(headerRow, ["Qtd Total OP", "QTD TOTAL OP"]);
   const warnings: string[] = [];
 
   if (simplifiedQtyIndex >= 0) {
@@ -312,7 +323,16 @@ export async function parsePlano(file: File): Promise<ImportResult<PlanoRow>> {
         warnings.push(`Referência ${referencia}: quantidade planejada negativa foi ignorada.`);
         return;
       }
-      rows.push({ data: dataIndex >= 0 ? parseDate(row[dataIndex]) : null, referencia, qtd_planejada: qtd });
+      const qtdTotalOp = opTotalIndex >= 0 ? quantity(row[opTotalIndex]) : NaN;
+      rows.push({
+        data: dataIndex >= 0 ? parseDate(row[dataIndex]) : null,
+        referencia,
+        op: opIndex >= 0 ? code(row[opIndex]) || null : null,
+        cliente: clientIndex >= 0 ? text(row[clientIndex]) || null : null,
+        pedido: orderIndex >= 0 ? code(row[orderIndex]) || text(row[orderIndex]) || null : null,
+        qtd_total_op: Number.isFinite(qtdTotalOp) ? qtdTotalOp : null,
+        qtd_planejada: qtd,
+      });
     });
     return { rows: groupPlano(rows), warnings, source: "simplificado" };
   }
@@ -335,6 +355,9 @@ export async function parsePlano(file: File): Promise<ImportResult<PlanoRow>> {
       return;
     }
     let scheduled = 0;
+    const op = opIndex >= 0 ? code(row[opIndex]) || null : null;
+    const cliente = clientIndex >= 0 ? text(row[clientIndex]) || null : null;
+    const pedido = orderIndex >= 0 ? code(row[orderIndex]) || text(row[orderIndex]) || null : null;
     dateColumns.forEach(({ index, date }) => {
       const value = quantity(row[index]);
       if (!Number.isFinite(value) || value === 0) return;
@@ -343,10 +366,12 @@ export async function parsePlano(file: File): Promise<ImportResult<PlanoRow>> {
         return;
       }
       scheduled += value;
-      rows.push({ data: date, referencia, qtd_planejada: value });
+      rows.push({ data: date, referencia, op, cliente, pedido, qtd_total_op: total, qtd_planejada: value });
     });
     const remainder = total - scheduled;
-    if (remainder > 1e-9) rows.push({ data: null, referencia, qtd_planejada: remainder });
+    if (remainder > 1e-9) {
+      rows.push({ data: null, referencia, op, cliente, pedido, qtd_total_op: total, qtd_planejada: remainder });
+    }
     else if (remainder < -1e-9)
       warnings.push(
         `Linha ${found.header + rowOffset + 2}: ${referencia} possui ${scheduled} programado para QTD total ${total}.`,
@@ -373,6 +398,7 @@ export async function parseApontamento(
   const refIndex = headerIndex(headerRow, ["Referência", "CÓD. PRODUTO", "COD PRODUTO"]);
   const sectorIndex = headerIndex(headerRow, ["Setor"]);
   const qtyIndex = headerIndex(headerRow, ["Qtd Produzida"]);
+  const opIndex = headerIndex(headerRow, ["OP"]);
   const result: ApontamentoRow[] = [];
   const ignoredBySector = new Map<string, number>();
   let invalidQuantity = 0;
@@ -397,7 +423,13 @@ export async function parseApontamento(
       invalidQuantity += 1;
       return;
     }
-    result.push({ data, referencia, setor, qtd_produzida: qtd });
+    result.push({
+      data,
+      referencia,
+      setor,
+      op: opIndex >= 0 ? code(row[opIndex]) || null : null,
+      qtd_produzida: qtd,
+    });
   });
 
   const warnings = [...ignoredBySector.entries()].map(

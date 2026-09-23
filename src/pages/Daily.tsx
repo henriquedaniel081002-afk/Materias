@@ -481,6 +481,35 @@ export default function Daily() {
             <Detail label="Setor">{selected.sector}</Detail>
             <Detail label="Unidade">{selected.unit}</Detail>
           </div>
+          <h3>Dados da OP</h3>
+          <div className="op-detail-card daily-op-detail">
+            <div>
+              <span>OP</span>
+              <strong>{selected.op || "Não informada"}</strong>
+            </div>
+            <div>
+              <span>Qtd. total da OP</span>
+              <strong>
+                {selected.opTotal !== null
+                  ? number(selected.opTotal)
+                  : selected.op
+                    ? "Não encontrada no Plano"
+                    : "Não informada"}
+              </strong>
+            </div>
+            <div>
+              <span>Cliente</span>
+              <strong>
+                {selected.client || (selected.op ? "Não encontrado no Plano" : "Não informado")}
+              </strong>
+            </div>
+            <div>
+              <span>Pedido</span>
+              <strong>
+                {selected.order || (selected.op ? "Não encontrado no Plano" : "Não informado")}
+              </strong>
+            </div>
+          </div>
           <h3>Composição do consumo</h3>
           <div className="calculation">
             <Detail label="Quantidade produzida">{number(selected.produced)} produtos</Detail>

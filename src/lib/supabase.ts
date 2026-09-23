@@ -102,10 +102,13 @@ const numeric = <T extends Record<string, unknown>>(row: T, fields: string[]) =>
 
 export async function loadDatabase(): Promise<DatabaseData> {
   const [planoRaw, apontamentoRaw, fichaRaw, estoqueRaw, followUpRaw] = await Promise.all([
-    fetchAll<Record<string, unknown>>("plano", "data,referencia,qtd_planejada"),
+    fetchAll<Record<string, unknown>>(
+      "plano",
+      "data,referencia,op,cliente,pedido,qtd_total_op,qtd_planejada",
+    ),
     fetchAll<Record<string, unknown>>(
       "apontamento",
-      "data,referencia,setor,qtd_produzida",
+      "data,referencia,setor,op,qtd_produzida",
     ),
     fetchAll<Record<string, unknown>>(
       "ficha_tecnica",
@@ -122,7 +125,16 @@ export async function loadDatabase(): Promise<DatabaseData> {
   ]);
 
   return {
-    plano: planoRaw.map((r) => numeric(r, ["qtd_planejada"]) as unknown as PlanoRow),
+    plano: planoRaw.map((r) => {
+      const parsed = numeric(r, ["qtd_planejada"]);
+      const opTotal = Number(r.qtd_total_op);
+      parsed.qtd_total_op = r.qtd_total_op === null || r.qtd_total_op === undefined
+        ? null
+        : Number.isFinite(opTotal)
+          ? opTotal
+          : null;
+      return parsed as unknown as PlanoRow;
+    }),
     apontamento: apontamentoRaw.map(
       (r) => numeric(r, ["qtd_produzida"]) as unknown as ApontamentoRow,
     ),

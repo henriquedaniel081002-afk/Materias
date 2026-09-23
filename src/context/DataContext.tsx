@@ -15,6 +15,8 @@ export interface DataContextValue {
   data: DatabaseData;
   daily: DailyConsumption[];
   plannedDemands: PlannedDemand[];
+  cascadeEnabled: boolean;
+  setCascadeEnabled: (enabled: boolean) => void;
   counts: TableCounts;
   loading: boolean;
   error: string | null;
@@ -39,6 +41,17 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [connectionValidated, setConnectionValidated] = useState(false);
   const [version, setVersion] = useState(0);
+  const [cascadeEnabled, setCascadeEnabledState] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return window.localStorage.getItem("itam-materiais:cascata") !== "false";
+  });
+
+  const setCascadeEnabled = useCallback((enabled: boolean) => {
+    setCascadeEnabledState(enabled);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("itam-materiais:cascata", String(enabled));
+    }
+  }, []);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -63,12 +76,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }, [refresh]);
 
   const daily = useMemo(
-    () => createDailyConsumption(data.apontamento, data.fichaTecnica),
-    [data.apontamento, data.fichaTecnica],
+    () => createDailyConsumption(data.apontamento, data.fichaTecnica, data.plano),
+    [data.apontamento, data.fichaTecnica, data.plano],
   );
   const plannedDemands = useMemo(
-    () => createPlannedDemands(data.plano, data.fichaTecnica),
-    [data.plano, data.fichaTecnica],
+    () => createPlannedDemands(data.plano, data.fichaTecnica, cascadeEnabled),
+    [data.plano, data.fichaTecnica, cascadeEnabled],
   );
   const counts = useMemo<TableCounts>(
     () => ({
@@ -86,6 +99,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
       data,
       daily,
       plannedDemands,
+      cascadeEnabled,
+      setCascadeEnabled,
       counts,
       loading,
       error,
@@ -93,7 +108,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       version,
       refresh,
     }),
-    [data, daily, plannedDemands, counts, loading, error, connectionValidated, version, refresh],
+    [data, daily, plannedDemands, cascadeEnabled, setCascadeEnabled, counts, loading, error, connectionValidated, version, refresh],
   );
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
