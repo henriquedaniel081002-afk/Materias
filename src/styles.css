@@ -6558,3 +6558,223 @@ tbody tr:hover {
 :root[data-theme="light"] .app-footer {
   color: #455963;
 }
+
+/* ===== Tema claro: contraste visual validado por telas v4 =====
+   Correção dirigida aos elementos que ainda herdavam tons claros do tema escuro.
+   Mantém superfícies, layout, estados e tema escuro inalterados. */
+:root[data-theme="light"] {
+  --itam-text: #111827;
+  --itam-text-soft: #1f2937;
+  --itam-text-muted: #334155;
+  --muted: #334155;
+  --chart-axis: #334155;
+  --chart-label: #1f2937;
+  --chart-tooltip-text: #111827;
+}
+
+/* Textos de apoio e microtipografia */
+:root[data-theme="light"] .page-header p,
+:root[data-theme="light"] .topbar,
+:root[data-theme="light"] .topbar > div > span:first-of-type,
+:root[data-theme="light"] .period-context > span,
+:root[data-theme="light"] .brand small,
+:root[data-theme="light"] .nav-label,
+:root[data-theme="light"] .version,
+:root[data-theme="light"] .workspace span,
+:root[data-theme="light"] .filters label,
+:root[data-theme="light"] .kpi-label,
+:root[data-theme="light"] .kpi small,
+:root[data-theme="light"] .panel-head p,
+:root[data-theme="light"] .chart-note,
+:root[data-theme="light"] .muted,
+:root[data-theme="light"] .desktop-note,
+:root[data-theme="light"] .import-card-copy p,
+:root[data-theme="light"] .import-card-copy small,
+:root[data-theme="light"] .connection-panel p,
+:root[data-theme="light"] .settings-card-head p,
+:root[data-theme="light"] .theme-option-copy small,
+:root[data-theme="light"] .settings-note,
+:root[data-theme="light"] .app-footer {
+  color: #334155;
+}
+
+/* Consumo diário: seletor/legenda de unidades */
+:root[data-theme="light"] .inline-label,
+:root[data-theme="light"] .unit-availability,
+:root[data-theme="light"] .unit-availability em {
+  color: #334155;
+}
+
+:root[data-theme="light"] .unit-availability b {
+  color: #475569;
+  background: #eef2f6;
+  border-color: #c7d2da;
+}
+
+:root[data-theme="light"] .unit-availability b.active {
+  color: #075f4b;
+  background: #d9f5e9;
+  border-color: #8bd5b6;
+}
+
+/* Cards, tabelas e contadores: labels pequenos precisam parecer texto, não watermark */
+:root[data-theme="light"] .database-counters span,
+:root[data-theme="light"] .detail > span,
+:root[data-theme="light"] .material-detail-grid .detail > span,
+:root[data-theme="light"] .analysis-summary-grid .detail > span,
+:root[data-theme="light"] .op-detail-card span,
+:root[data-theme="light"] .op-modal-grid span,
+:root[data-theme="light"] .count,
+:root[data-theme="light"] .sector,
+:root[data-theme="light"] .coverage-strip,
+:root[data-theme="light"] .unit-total,
+:root[data-theme="light"] .undated-note,
+:root[data-theme="light"] .unit-warning {
+  color: #334155;
+}
+
+:root[data-theme="light"] th,
+:root[data-theme="light"] .future-analysis-modal .composition th {
+  color: #1f2937;
+}
+
+:root[data-theme="light"] td,
+:root[data-theme="light"] .future-analysis-modal .composition td {
+  color: #111827;
+}
+
+/* Drawer de consumo diário */
+:root[data-theme="light"] .material-detail-head > div > span {
+  color: #0e7490;
+}
+
+:root[data-theme="light"] .material-detail-head p,
+:root[data-theme="light"] .drawer header p,
+:root[data-theme="light"] .drawer header > span,
+:root[data-theme="light"] .drawer .calculation .detail > span,
+:root[data-theme="light"] .drawer .calculation > span {
+  color: #334155;
+}
+
+:root[data-theme="light"] .drawer .result-box > span {
+  color: #166047;
+}
+
+:root[data-theme="light"] .drawer .result-box strong {
+  color: #087443;
+}
+
+/* Necessidade futura: textos analíticos e legendas */
+:root[data-theme="light"] .analysis-modal-topline p,
+:root[data-theme="light"] .analysis-section-head p,
+:root[data-theme="light"] .analysis-projection-legend,
+:root[data-theme="light"] .analysis-projection-legend p,
+:root[data-theme="light"] .composition-click-hint,
+:root[data-theme="light"] .cascade-copy p,
+:root[data-theme="light"] .future-analysis-modal .analysis-balance small {
+  color: #334155;
+}
+
+:root[data-theme="light"] .analysis-summary-grid .detail > span,
+:root[data-theme="light"] .future-analysis-modal .analysis-balance > span {
+  color: #334155;
+}
+
+/* Ruptura: no claro, rosa pastel tinha contraste insuficiente */
+:root[data-theme="light"] .rupture-banner,
+:root[data-theme="light"] .detail-rupture-callout,
+:root[data-theme="light"] .analysis-rupture-callout,
+:root[data-theme="light"] .future-analysis-modal .rupture-banner {
+  color: #9f1239;
+  background: #fff1f3;
+  border-color: #f3a8b5;
+}
+
+:root[data-theme="light"] .rupture-banner > svg,
+:root[data-theme="light"] .detail-rupture-callout > svg {
+  color: #be123c;
+}
+
+:root[data-theme="light"] .rupture-banner span,
+:root[data-theme="light"] .rupture-banner small,
+:root[data-theme="light"] .detail-rupture-callout span,
+:root[data-theme="light"] .detail-rupture-callout small {
+  color: #9f1239;
+}
+
+:root[data-theme="light"] .rupture-banner strong,
+:root[data-theme="light"] .detail-rupture-callout strong {
+  color: #881337;
+}
+
+:root[data-theme="light"] .analysis-risk-date,
+:root[data-theme="light"] .future-analysis-modal .analysis-balance.negative-result > span,
+:root[data-theme="light"] .future-analysis-modal .analysis-balance.negative-result strong,
+:root[data-theme="light"] .drawer .result-box.negative-result > span,
+:root[data-theme="light"] .drawer .result-box.negative-result strong {
+  color: #9f1239;
+}
+
+/* Estados de ruptura sem data mantêm amarelo, porém com leitura forte */
+:root[data-theme="light"] .rupture-banner.undated-rupture,
+:root[data-theme="light"] .detail-rupture-callout.undated,
+:root[data-theme="light"] .analysis-rupture-callout.undated,
+:root[data-theme="light"] .future-analysis-modal .rupture-banner.undated-rupture {
+  color: #854d0e;
+  background: #fff8e7;
+  border-color: #e8c77a;
+}
+
+:root[data-theme="light"] .rupture-banner.undated-rupture span,
+:root[data-theme="light"] .rupture-banner.undated-rupture small,
+:root[data-theme="light"] .detail-rupture-callout.undated span,
+:root[data-theme="light"] .detail-rupture-callout.undated small {
+  color: #854d0e;
+}
+
+:root[data-theme="light"] .rupture-banner.undated-rupture strong,
+:root[data-theme="light"] .detail-rupture-callout.undated strong {
+  color: #713f12;
+}
+
+/* Modal de OP */
+:root[data-theme="light"] .op-modal > header p,
+:root[data-theme="light"] .op-modal-grid span {
+  color: #334155;
+}
+
+:root[data-theme="light"] .op-modal-grid strong {
+  color: #111827;
+}
+
+/* Importações: aviso inferior e descrições não podem desaparecer no canvas claro */
+:root[data-theme="light"] .import-rule-note {
+  color: #334155;
+  background: #e8f1f6;
+  border-color: #b6cad6;
+}
+
+:root[data-theme="light"] .import-rule-note strong {
+  color: #1e293b;
+}
+
+:root[data-theme="light"] .import-rule-note p {
+  color: #334155;
+}
+
+:root[data-theme="light"] .database-counters span {
+  color: #334155;
+}
+
+/* Placeholders e eixos: continuam secundários, mas nunca claros demais */
+:root[data-theme="light"] input::placeholder {
+  color: #475569;
+  opacity: 1;
+}
+
+:root[data-theme="light"] .chart .recharts-cartesian-axis-tick-value,
+:root[data-theme="light"] .chart .recharts-label-list text,
+:root[data-theme="light"] .analysis-projection-chart .recharts-cartesian-axis-tick-value,
+:root[data-theme="light"] .analysis-projection-chart .recharts-label-list text {
+  fill: #334155 !important;
+}
