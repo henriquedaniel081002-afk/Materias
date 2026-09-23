@@ -5775,3 +5775,652 @@ tbody tr:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* ===== Tema claro refinado v2 =====
+   Superfícies brancas sobre canvas cinza frio, com azul/ciano como destaque.
+   Este bloco vem por último intencionalmente para impedir que cores fixas do
+   tema escuro vazem para o modo claro. */
+:root[data-theme="light"] {
+  --bg: #e8eef2;
+  --surface: #ffffff;
+  --border: #cbd7de;
+  --muted: #61727c;
+  --green: #0e7490;
+  --itam-canvas: #e8eef2;
+  --itam-canvas-subtle: #e1e9ee;
+  --itam-surface: #ffffff;
+  --itam-surface-muted: #f4f7f9;
+  --itam-surface-raised: #ffffff;
+  --itam-surface-hover: rgba(14, 116, 144, 0.065);
+  --itam-border: rgba(45, 70, 82, 0.15);
+  --itam-border-strong: rgba(45, 70, 82, 0.25);
+  --itam-text: #17252c;
+  --itam-text-soft: #40535e;
+  --itam-text-muted: #687983;
+  --itam-accent: #0e7490;
+  --itam-accent-hover: #0b6078;
+  --itam-accent-soft: rgba(14, 116, 144, 0.10);
+  --itam-accent-border: rgba(14, 116, 144, 0.27);
+  --itam-shadow: 0 12px 30px rgba(31, 50, 61, 0.10);
+  --itam-shadow-overlay: 0 28px 72px rgba(22, 40, 50, 0.24);
+  --chart-axis: #637680;
+  --chart-label: #455b66;
+  --chart-grid: rgba(48, 76, 89, 0.14);
+  --chart-zero: rgba(48, 76, 89, 0.28);
+  --chart-dot-stroke: #ffffff;
+  --chart-hover: rgba(14, 116, 144, 0.08);
+  --chart-tooltip-bg: rgba(252, 254, 255, 0.99);
+  --chart-tooltip-border: rgba(45, 70, 82, 0.20);
+  --chart-tooltip-text: #17252c;
+  --chart-tooltip-shadow: 0 14px 34px rgba(31, 50, 61, 0.18);
+  --chart-stock: #2563a6;
+  --chart-need: #0e7490;
+  --chart-balance-positive: #13865b;
+  --chart-risk-label: #b42335;
+  --chart-incoming: #9a6700;
+  background: var(--itam-canvas);
+}
+
+:root[data-theme="light"] body {
+  color: var(--itam-text);
+  background:
+    radial-gradient(circle at 12% -12%, rgba(14, 116, 144, 0.075), transparent 32rem),
+    linear-gradient(rgba(47, 75, 88, 0.024) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47, 75, 88, 0.024) 1px, transparent 1px),
+    var(--itam-canvas);
+}
+
+:root[data-theme="light"] ::selection {
+  color: #10272f;
+  background: rgba(14, 116, 144, 0.18);
+}
+
+/* Estrutura */
+:root[data-theme="light"] .sidebar {
+  background: #eef3f6;
+  border-right-color: rgba(45, 70, 82, 0.14);
+  box-shadow: 14px 0 36px rgba(31, 50, 61, 0.08);
+}
+
+:root[data-theme="light"] .topbar {
+  color: #61737d;
+  background: rgba(246, 249, 251, 0.94);
+  border-bottom-color: rgba(45, 70, 82, 0.13);
+  box-shadow: 0 7px 22px rgba(31, 50, 61, 0.07);
+}
+
+:root[data-theme="light"] .brand,
+:root[data-theme="light"] .sidebar-bottom,
+:root[data-theme="light"] .page-header {
+  border-color: rgba(45, 70, 82, 0.12);
+}
+
+:root[data-theme="light"] .brand strong,
+:root[data-theme="light"] h1,
+:root[data-theme="light"] .topbar strong,
+:root[data-theme="light"] .period-context strong,
+:root[data-theme="light"] .workspace strong {
+  color: #17252c;
+}
+
+:root[data-theme="light"] .brand small,
+:root[data-theme="light"] .nav-label,
+:root[data-theme="light"] .version,
+:root[data-theme="light"] .workspace span,
+:root[data-theme="light"] .topbar > div > span:first-of-type,
+:root[data-theme="light"] .page-header p,
+:root[data-theme="light"] .period-context > span {
+  color: #687983;
+}
+
+:root[data-theme="light"] .sidebar nav button,
+:root[data-theme="light"] .workspace,
+:root[data-theme="light"] .collapse-button {
+  color: #4c606b;
+}
+
+:root[data-theme="light"] .sidebar nav button:hover,
+:root[data-theme="light"] .collapse-button:hover {
+  color: #18272f;
+  background: rgba(14, 116, 144, 0.07);
+  border-color: rgba(14, 116, 144, 0.11);
+}
+
+:root[data-theme="light"] .sidebar nav button.active {
+  color: #0b6078;
+  background: rgba(14, 116, 144, 0.105);
+  border-color: rgba(14, 116, 144, 0.22);
+  box-shadow: inset 0 0 22px rgba(14, 116, 144, 0.035);
+}
+
+:root[data-theme="light"] .sidebar nav button.active::before {
+  background: #0891b2;
+}
+
+:root[data-theme="light"] .sidebar nav button.active .nav-arrow,
+:root[data-theme="light"] .workspace > svg,
+:root[data-theme="light"] .eyebrow,
+:root[data-theme="light"] .filter-top > span > svg,
+:root[data-theme="light"] .analysis-modal-eyebrow,
+:root[data-theme="light"] .analysis-section-head > div > span,
+:root[data-theme="light"] .settings-card-head > div:first-child > span {
+  color: #0e7490;
+}
+
+:root[data-theme="light"] .workspace {
+  background: rgba(14, 116, 144, 0.045);
+  border-color: rgba(45, 70, 82, 0.11);
+}
+
+:root[data-theme="light"] .period-context,
+:root[data-theme="light"] .data-status {
+  background: #f7fafb;
+  border-color: rgba(45, 70, 82, 0.13);
+}
+
+:root[data-theme="light"] .data-status {
+  color: #62747e;
+}
+
+:root[data-theme="light"] .data-status.connected {
+  color: #0d7250;
+  background: rgba(18, 132, 91, 0.09);
+  border-color: rgba(18, 132, 91, 0.20);
+}
+
+/* Superfícies */
+:root[data-theme="light"] .filter-panel,
+:root[data-theme="light"] .panel,
+:root[data-theme="light"] .kpi,
+:root[data-theme="light"] .connection-panel,
+:root[data-theme="light"] .import-card,
+:root[data-theme="light"] .database-counters > div,
+:root[data-theme="light"] .material-detail-panel,
+:root[data-theme="light"] .settings-card {
+  background: #ffffff;
+  border-color: rgba(45, 70, 82, 0.15);
+  box-shadow: 0 7px 20px rgba(31, 50, 61, 0.065);
+}
+
+:root[data-theme="light"] .panel-head,
+:root[data-theme="light"] .material-detail-head,
+:root[data-theme="light"] .settings-card-head,
+:root[data-theme="light"] .settings-note,
+:root[data-theme="light"] .table-footer {
+  border-color: rgba(45, 70, 82, 0.11);
+}
+
+/* Tipografia: impede textos claros herdados do tema escuro */
+:root[data-theme="light"] .filter-top > span,
+:root[data-theme="light"] .section-line h2,
+:root[data-theme="light"] .panel-head h2,
+:root[data-theme="light"] .kpi strong,
+:root[data-theme="light"] .database-counters strong,
+:root[data-theme="light"] .import-card h3,
+:root[data-theme="light"] .material-detail-head h3,
+:root[data-theme="light"] .analysis-section-head h3,
+:root[data-theme="light"] .settings-card-head h2,
+:root[data-theme="light"] .theme-option-copy strong,
+:root[data-theme="light"] .empty strong,
+:root[data-theme="light"] .detail strong,
+:root[data-theme="light"] .material-detail-grid .detail strong,
+:root[data-theme="light"] .analysis-summary-grid .detail strong,
+:root[data-theme="light"] .drawer h2,
+:root[data-theme="light"] .drawer h3,
+:root[data-theme="light"] .drawer > header h2,
+:root[data-theme="light"] .drawer .detail-grid .detail strong,
+:root[data-theme="light"] .future-analysis-modal > header h2,
+:root[data-theme="light"] .future-analysis-modal .composition td,
+:root[data-theme="light"] .cascade-copy strong,
+:root[data-theme="light"] .cascade-toggle,
+:root[data-theme="light"] .op-detail-card strong,
+:root[data-theme="light"] .op-modal > header h3,
+:root[data-theme="light"] .op-modal-grid strong,
+:root[data-theme="light"] .settings-current-theme strong {
+  color: #1b2c34;
+}
+
+:root[data-theme="light"] .filters label,
+:root[data-theme="light"] .kpi-label,
+:root[data-theme="light"] .kpi small,
+:root[data-theme="light"] .panel-head p,
+:root[data-theme="light"] .chart-note,
+:root[data-theme="light"] .muted,
+:root[data-theme="light"] .import-card-copy p,
+:root[data-theme="light"] .import-card-copy small,
+:root[data-theme="light"] .settings-card-head p,
+:root[data-theme="light"] .theme-option-copy small,
+:root[data-theme="light"] .settings-note,
+:root[data-theme="light"] .detail > span,
+:root[data-theme="light"] .material-detail-grid .detail > span,
+:root[data-theme="light"] .analysis-summary-grid .detail > span,
+:root[data-theme="light"] .drawer header p,
+:root[data-theme="light"] .drawer header > span,
+:root[data-theme="light"] .analysis-section-head p,
+:root[data-theme="light"] .cascade-copy p,
+:root[data-theme="light"] .composition-click-hint,
+:root[data-theme="light"] .op-detail-card span,
+:root[data-theme="light"] .op-modal > header p,
+:root[data-theme="light"] .op-modal-grid span,
+:root[data-theme="light"] .settings-current-theme span {
+  color: #687983;
+}
+
+/* Controles */
+:root[data-theme="light"] select,
+:root[data-theme="light"] input,
+:root[data-theme="light"] .filters input,
+:root[data-theme="light"] .filters select,
+:root[data-theme="light"] .inline-label select,
+:root[data-theme="light"] .panel-head select,
+:root[data-theme="light"] .import-period select,
+:root[data-theme="light"] .import-period input,
+:root[data-theme="light"] .chart-material-select .searchable-select > input,
+:root[data-theme="light"] .search input {
+  color: #20313a;
+  background: #f7fafb;
+  border-color: rgba(45, 70, 82, 0.20);
+  box-shadow: none;
+}
+
+:root[data-theme="light"] select:hover:not(:disabled),
+:root[data-theme="light"] input:hover:not(:disabled) {
+  border-color: rgba(14, 116, 144, 0.38);
+}
+
+:root[data-theme="light"] input::placeholder {
+  color: #8998a0;
+}
+
+:root[data-theme="light"] option,
+:root[data-theme="light"] .combo-options {
+  color: #20313a;
+  background: #ffffff;
+}
+
+:root[data-theme="light"] .searchable-select > svg,
+:root[data-theme="light"] .combo-clear,
+:root[data-theme="light"] .calendar-control {
+  color: #6a7b84;
+}
+
+:root[data-theme="light"] .combo-clear:hover {
+  color: #17303b;
+  background: rgba(14, 116, 144, 0.08);
+}
+
+:root[data-theme="light"] .combo-options {
+  border-color: rgba(45, 70, 82, 0.17);
+  box-shadow: 0 14px 30px rgba(31, 50, 61, 0.15);
+}
+
+:root[data-theme="light"] .combo-options button {
+  color: #40545f;
+}
+
+:root[data-theme="light"] .combo-options button:hover,
+:root[data-theme="light"] .combo-options button.active {
+  color: #0b6078;
+  background: rgba(14, 116, 144, 0.09);
+}
+
+:root[data-theme="light"] .text-button {
+  color: #536873;
+}
+
+:root[data-theme="light"] .text-button:hover {
+  color: #0b6078;
+  background: rgba(14, 116, 144, 0.07);
+}
+
+/* KPIs e destaques */
+:root[data-theme="light"] .kpi-label > span,
+:root[data-theme="light"] .section-index {
+  color: #0e7490;
+  background: rgba(14, 116, 144, 0.08);
+  border-color: rgba(14, 116, 144, 0.16);
+}
+
+:root[data-theme="light"] .kpi.accent {
+  border-color: rgba(14, 116, 144, 0.28);
+  box-shadow: inset 0 2px #0891b2, 0 7px 20px rgba(31, 50, 61, 0.065);
+}
+
+:root[data-theme="light"] .kpi.accent strong,
+:root[data-theme="light"] .kpi.positive strong,
+:root[data-theme="light"] .emerald,
+:root[data-theme="light"] .coverage-strip strong,
+:root[data-theme="light"] .unit-total strong,
+:root[data-theme="light"] .import-success,
+:root[data-theme="light"] .drawer .result-box strong,
+:root[data-theme="light"] .future-analysis-modal .analysis-balance strong {
+  color: #117a55;
+}
+
+:root[data-theme="light"] .kpi.negative strong,
+:root[data-theme="light"] .red,
+:root[data-theme="light"] .import-error,
+:root[data-theme="light"] .analysis-risk-date,
+:root[data-theme="light"] .drawer .result-box.negative-result > span,
+:root[data-theme="light"] .drawer .result-box.negative-result strong,
+:root[data-theme="light"] .future-analysis-modal .analysis-balance.negative-result strong,
+:root[data-theme="light"] .future-analysis-modal .analysis-balance.negative-result > span {
+  color: #b42335;
+}
+
+/* Gráficos */
+:root[data-theme="light"] .chart-panel {
+  background: #ffffff;
+}
+
+:root[data-theme="light"] .chart-panel .panel-head {
+  background: #f8fafb;
+}
+
+:root[data-theme="light"] .chart-panel .chart,
+:root[data-theme="light"] .projection-layout .chart,
+:root[data-theme="light"] .analysis-projection-chart {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(14, 116, 144, 0.055), transparent 19rem),
+    #f5f8fa;
+  border-color: rgba(45, 70, 82, 0.11);
+}
+
+:root[data-theme="light"] .chart-panel .chart::before {
+  background:
+    linear-gradient(rgba(48, 76, 89, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(48, 76, 89, 0.025) 1px, transparent 1px);
+}
+
+:root[data-theme="light"] .chart .recharts-cartesian-axis-tick-value,
+:root[data-theme="light"] .chart .recharts-label-list text {
+  fill: #5f727c !important;
+}
+
+:root[data-theme="light"] .chart .recharts-tooltip-label {
+  color: #637680 !important;
+}
+
+:root[data-theme="light"] .chart .recharts-tooltip-item {
+  color: #1f313a !important;
+}
+
+/* Tabelas */
+:root[data-theme="light"] th,
+:root[data-theme="light"] .future-analysis-modal .composition th {
+  color: #4b606b;
+  background: #edf3f6;
+  border-color: rgba(45, 70, 82, 0.14);
+}
+
+:root[data-theme="light"] td,
+:root[data-theme="light"] .future-analysis-modal .composition td {
+  color: #263943;
+  border-color: rgba(45, 70, 82, 0.10);
+}
+
+:root[data-theme="light"] .code {
+  color: #1e3440;
+}
+
+:root[data-theme="light"] .sector,
+:root[data-theme="light"] .count,
+:root[data-theme="light"] .coverage-strip,
+:root[data-theme="light"] .unit-total,
+:root[data-theme="light"] .undated-note,
+:root[data-theme="light"] .unit-warning {
+  color: #62747e;
+}
+
+:root[data-theme="light"] tbody tr:hover,
+:root[data-theme="light"] .future-analysis-modal .composition tbody tr:hover {
+  background: rgba(14, 116, 144, 0.055);
+}
+
+:root[data-theme="light"] .selected,
+:root[data-theme="light"] .future-analysis-modal .composition tbody tr.op-row-selected {
+  background: rgba(14, 116, 144, 0.09);
+}
+
+:root[data-theme="light"] .table-footer {
+  background: #f7f9fa;
+}
+
+:root[data-theme="light"] .table-footer button {
+  color: #526670;
+  background: #ffffff;
+  border-color: rgba(45, 70, 82, 0.15);
+}
+
+:root[data-theme="light"] .table-footer button:hover:not(:disabled) {
+  color: #0b6078;
+  background: rgba(14, 116, 144, 0.07);
+  border-color: rgba(14, 116, 144, 0.24);
+}
+
+/* Blocos auxiliares */
+:root[data-theme="light"] .search,
+:root[data-theme="light"] .result-box,
+:root[data-theme="light"] .detail,
+:root[data-theme="light"] .material-detail-grid .detail,
+:root[data-theme="light"] .analysis-summary-grid .detail,
+:root[data-theme="light"] .op-detail-card > div,
+:root[data-theme="light"] .op-modal-grid > div {
+  background: #f4f7f9;
+  border-color: rgba(45, 70, 82, 0.11);
+}
+
+:root[data-theme="light"] .secondary-button {
+  color: #344b57;
+  background: #f7fafb;
+  border-color: rgba(45, 70, 82, 0.17);
+}
+
+:root[data-theme="light"] .secondary-button:hover {
+  color: #0b6078;
+  background: rgba(14, 116, 144, 0.07);
+  border-color: rgba(14, 116, 144, 0.25);
+}
+
+:root[data-theme="light"] .upload-button {
+  color: #f7fdff;
+  background: #0e7490;
+  border-color: #0e7490;
+  box-shadow: 0 9px 22px rgba(14, 116, 144, 0.18);
+}
+
+:root[data-theme="light"] .upload-button:hover {
+  color: #ffffff;
+  background: #0b6078;
+  border-color: #0b6078;
+}
+
+/* Estados semânticos */
+:root[data-theme="light"] .badge.good {
+  color: #0d7250;
+  background: rgba(18, 132, 91, 0.10);
+  border-color: rgba(18, 132, 91, 0.22);
+}
+
+:root[data-theme="light"] .badge.bad {
+  color: #b42335;
+  background: rgba(180, 35, 53, 0.08);
+  border-color: rgba(180, 35, 53, 0.20);
+}
+
+:root[data-theme="light"] .badge.zero {
+  color: #5b6d77;
+  background: rgba(72, 91, 101, 0.07);
+  border-color: rgba(72, 91, 101, 0.16);
+}
+
+:root[data-theme="light"] .badge.warn,
+:root[data-theme="light"] .import-warnings,
+:root[data-theme="light"] .future-analysis-modal .followup-undated-total,
+:root[data-theme="light"] .future-analysis-modal .followup-no-date {
+  color: #8a5b00;
+}
+
+:root[data-theme="light"] .data-error,
+:root[data-theme="light"] .data-error strong,
+:root[data-theme="light"] .error,
+:root[data-theme="light"] .date-error {
+  color: #a92d3f;
+}
+
+:root[data-theme="light"] .data-error button {
+  color: #963044;
+}
+
+/* Modais e drawers */
+:root[data-theme="light"] .drawer-overlay,
+:root[data-theme="light"] .op-modal-overlay,
+:root[data-theme="light"] .mobile-shade {
+  background: rgba(27, 42, 50, 0.48);
+}
+
+:root[data-theme="light"] .drawer,
+:root[data-theme="light"] .future-analysis-modal {
+  background:
+    radial-gradient(circle at 14% -8%, rgba(14, 116, 144, 0.07), transparent 23rem),
+    #f5f8fa;
+  border-color: rgba(45, 70, 82, 0.15);
+  box-shadow: -26px 0 72px rgba(26, 44, 54, 0.21);
+}
+
+:root[data-theme="light"] .drawer > header,
+:root[data-theme="light"] .future-analysis-modal > header {
+  background: rgba(249, 251, 252, 0.97);
+  border-color: rgba(45, 70, 82, 0.12);
+  box-shadow: 0 10px 24px rgba(31, 50, 61, 0.075);
+}
+
+:root[data-theme="light"] .icon-button,
+:root[data-theme="light"] .op-modal-close,
+:root[data-theme="light"] .drawer > header > .icon-button {
+  color: #5d707a;
+  background: #eef3f6;
+  border-color: rgba(45, 70, 82, 0.13);
+}
+
+:root[data-theme="light"] .icon-button:hover,
+:root[data-theme="light"] .op-modal-close:hover,
+:root[data-theme="light"] .drawer > header > .icon-button:hover {
+  color: #17303b;
+  background: rgba(14, 116, 144, 0.09);
+  border-color: rgba(14, 116, 144, 0.23);
+}
+
+:root[data-theme="light"] .future-analysis-modal .composition {
+  background: #ffffff;
+  border-color: rgba(45, 70, 82, 0.14);
+}
+
+:root[data-theme="light"] .future-analysis-modal .composition::-webkit-scrollbar-track {
+  background: #e5edf1;
+}
+
+:root[data-theme="light"] .future-analysis-modal .composition::-webkit-scrollbar-thumb {
+  background: #aebdc5;
+  border-color: #e5edf1;
+}
+
+:root[data-theme="light"] .analysis-modal-section,
+:root[data-theme="light"] .projection-analysis,
+:root[data-theme="light"] .material-detail-panel {
+  border-color: rgba(45, 70, 82, 0.12);
+}
+
+:root[data-theme="light"] .future-analysis-modal .followup-undated-section {
+  background: rgba(245, 180, 32, 0.08);
+  border-color: rgba(154, 103, 0, 0.20);
+}
+
+:root[data-theme="light"] .cascade-control {
+  background: #ffffff;
+  border-color: rgba(45, 70, 82, 0.12);
+}
+
+:root[data-theme="light"] .cascade-toggle {
+  color: #243943;
+  background: #f4f7f9;
+  border-color: rgba(45, 70, 82, 0.15);
+}
+
+:root[data-theme="light"] .cascade-toggle:hover {
+  background: rgba(14, 116, 144, 0.07);
+  border-color: rgba(14, 116, 144, 0.25);
+}
+
+:root[data-theme="light"] .op-modal {
+  background:
+    radial-gradient(circle at 12% -12%, rgba(14, 116, 144, 0.075), transparent 24rem),
+    #ffffff;
+  border-color: rgba(45, 70, 82, 0.16);
+  box-shadow: 0 26px 68px rgba(25, 43, 53, 0.22);
+}
+
+:root[data-theme="light"] .op-modal > header {
+  background: #f5f8fa;
+  border-color: rgba(45, 70, 82, 0.12);
+}
+
+/* Configurações */
+:root[data-theme="light"] .settings-current-theme {
+  color: #0e7490;
+  background: rgba(14, 116, 144, 0.08);
+  border-color: rgba(14, 116, 144, 0.20);
+}
+
+:root[data-theme="light"] .theme-option {
+  color: #21343e;
+  background: #f7fafb;
+  border-color: rgba(45, 70, 82, 0.14);
+}
+
+:root[data-theme="light"] .theme-option:hover {
+  background: rgba(14, 116, 144, 0.065);
+  border-color: rgba(14, 116, 144, 0.22);
+}
+
+:root[data-theme="light"] .theme-option.active {
+  background: rgba(14, 116, 144, 0.10);
+  border-color: rgba(14, 116, 144, 0.30);
+  box-shadow: inset 3px 0 #0891b2;
+}
+
+:root[data-theme="light"] .theme-option-icon {
+  color: #0e7490;
+  background: rgba(14, 116, 144, 0.08);
+  border-color: rgba(14, 116, 144, 0.17);
+}
+
+:root[data-theme="light"] .theme-option-check {
+  color: transparent;
+  background: #eef3f6;
+  border-color: rgba(45, 70, 82, 0.18);
+}
+
+:root[data-theme="light"] .theme-option.active .theme-option-check {
+  color: #ffffff;
+  background: #0e7490;
+  border-color: #0e7490;
+}
+
+:root[data-theme="light"] .app-footer {
+  color: #697b84;
+  border-color: rgba(45, 70, 82, 0.11);
+}
+
+@media (max-width: 700px) {
+  :root[data-theme="light"] body {
+    background:
+      radial-gradient(circle at 16% -2%, rgba(14, 116, 144, 0.07), transparent 22rem),
+      var(--itam-canvas);
+  }
+
+  :root[data-theme="light"] .drawer,
+  :root[data-theme="light"] .future-analysis-modal {
+    background: #f3f7f9;
+  }
+}
