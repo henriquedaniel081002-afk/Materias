@@ -111,6 +111,15 @@ function Composition({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = rows.find((row) => row.id === selectedId) || null;
 
+  useEffect(() => {
+    if (!selected) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedId(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [selected]);
+
   return (
     <div className="composition-with-op">
       <div className="table-scroll composition">
@@ -156,24 +165,72 @@ function Composition({
         </table>
       </div>
       <p className="composition-click-hint">Clique em uma linha para visualizar os dados da OP.</p>
+
       {selected && (
-        <div className="op-detail-card" role="status">
-          <div>
-            <span>OP</span>
-            <strong>{selected.op || "Não informada"}</strong>
-          </div>
-          <div>
-            <span>Qtd. total da OP</span>
-            <strong>{selected.opTotal !== null ? number(selected.opTotal) : "Não informada"}</strong>
-          </div>
-          <div>
-            <span>Cliente</span>
-            <strong>{selected.client || "Não informado"}</strong>
-          </div>
-          <div>
-            <span>Pedido</span>
-            <strong>{selected.order || "Não informado"}</strong>
-          </div>
+        <div
+          className="op-modal-overlay"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setSelectedId(null);
+          }}
+        >
+          <section
+            className="op-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="op-modal-title"
+          >
+            <header>
+              <div>
+                <span>DETALHES DA OP</span>
+                <h3 id="op-modal-title">OP {selected.op || "não informada"}</h3>
+                <p>Informações vinculadas à linha selecionada da necessidade.</p>
+              </div>
+              <button
+                type="button"
+                className="op-modal-close"
+                onClick={() => setSelectedId(null)}
+                aria-label="Fechar detalhes da OP"
+              >
+                ×
+              </button>
+            </header>
+
+            <div className="op-modal-grid">
+              <div>
+                <span>OP</span>
+                <strong>{selected.op || "Não informada"}</strong>
+              </div>
+              <div>
+                <span>Qtd. total da OP</span>
+                <strong>{selected.opTotal !== null ? number(selected.opTotal) : "Não informada"}</strong>
+              </div>
+              <div>
+                <span>Cliente</span>
+                <strong>{selected.client || "Não informado"}</strong>
+              </div>
+              <div>
+                <span>Pedido</span>
+                <strong>{selected.order || "Não informado"}</strong>
+              </div>
+              <div>
+                <span>Referência</span>
+                <strong className="mono">{selected.reference}</strong>
+              </div>
+              <div>
+                <span>Setor</span>
+                <strong>{selected.sector}</strong>
+              </div>
+              <div>
+                <span>Data</span>
+                <strong>{selected.date ? date(selected.date) : "Sem data"}</strong>
+              </div>
+              <div>
+                <span>Qtd. planejada</span>
+                <strong>{number(selected.planned)}</strong>
+              </div>
+            </div>
+          </section>
         </div>
       )}
     </div>
