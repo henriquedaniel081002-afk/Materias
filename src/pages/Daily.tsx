@@ -364,19 +364,19 @@ export default function Daily() {
             <div className="chart">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={evolution} margin={{ top: 30, right: 18, left: 0, bottom: 0 }}>
-                  <CartesianGrid stroke="rgba(196, 255, 222, 0.08)" vertical={false} strokeDasharray="3 5" />
+                  <CartesianGrid stroke="var(--chart-grid)" vertical={false} strokeDasharray="3 5" />
                   <XAxis
                     dataKey="day"
                     tickLine={false}
                     axisLine={false}
-                    tick={{ fill: "#78877f", fontSize: 11 }}
+                    tick={{ fill: "var(--chart-axis)", fontSize: 11 }}
                     minTickGap={25}
                   />
                   <YAxis
                     tickFormatter={(value) => number(Number(value))}
                     tickLine={false}
                     axisLine={false}
-                    tick={{ fill: "#78877f", fontSize: 11 }}
+                    tick={{ fill: "var(--chart-axis)", fontSize: 11 }}
                     width={54}
                   />
                   <Tooltip
@@ -394,7 +394,7 @@ export default function Daily() {
                     <LabelList
                       dataKey="value"
                       position="top"
-                      fill="#aab8b0"
+                      fill="var(--chart-label)"
                       fontSize={10}
                       formatter={(value: number) => number(Number(value))}
                     />
@@ -425,7 +425,7 @@ export default function Daily() {
                     tick={{ fill: "#aab8b0", fontSize: 11 }}
                   />
                   <Tooltip
-                    cursor={{ fill: "rgba(52, 211, 153, 0.055)" }}
+                    cursor={{ fill: "var(--chart-hover)" }}
                     contentStyle={tooltipStyle}
                     formatter={(value) => [`${number(Number(value))} ${unit}`, "Consumo"]}
                     labelFormatter={(value) => {

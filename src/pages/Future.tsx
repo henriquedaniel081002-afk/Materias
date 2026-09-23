@@ -78,22 +78,22 @@ function ProjectionTooltip({
 
   return (
     <div style={{ ...tooltipStyle, padding: "10px 12px", minWidth: 220 }}>
-      <div style={{ marginBottom: 7, color: "#9ba9a1", fontSize: 11 }}>{label}</div>
+      <div style={{ marginBottom: 7, color: "var(--chart-axis)", fontSize: 11 }}>{label}</div>
       <div style={rowStyle}>
-        <span style={{ color: "#9fb8ff" }}>Estoque disponível</span>
+        <span style={{ color: "var(--chart-stock)" }}>Estoque disponível</span>
         <strong>{number(stock)} {unit}</strong>
       </div>
       <div style={rowStyle}>
-        <span style={{ color: "#86efac" }}>Necessidade acumulada</span>
+        <span style={{ color: "var(--chart-need)" }}>Necessidade acumulada</span>
         <strong>{number(need)} {unit}</strong>
       </div>
-      <div style={{ ...rowStyle, marginTop: 5, paddingTop: 5, borderTop: "1px solid rgba(196, 255, 222, 0.12)" }}>
-        <span style={{ color: balance < 0 ? "#fda4af" : "#c4ffde" }}>Saldo de estoque</span>
-        <strong style={{ color: balance < 0 ? "#fda4af" : "#c4ffde" }}>{number(balance)} {unit}</strong>
+      <div style={{ ...rowStyle, marginTop: 5, paddingTop: 5, borderTop: "1px solid var(--chart-tooltip-border)" }}>
+        <span style={{ color: balance < 0 ? "var(--chart-risk-label)" : "var(--chart-balance-positive)" }}>Saldo de estoque</span>
+        <strong style={{ color: balance < 0 ? "var(--chart-risk-label)" : "var(--chart-balance-positive)" }}>{number(balance)} {unit}</strong>
       </div>
       {incoming > 0 && (
         <div style={{ ...rowStyle, marginTop: 4 }}>
-          <span style={{ color: "#fbbf24" }}>Entrada FOLLOW UP</span>
+          <span style={{ color: "var(--chart-incoming)" }}>Entrada FOLLOW UP</span>
           <strong>{number(incoming)} {unit}</strong>
         </div>
       )}
@@ -741,11 +741,11 @@ export default function Future() {
               {timeline.length ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={timeline} margin={{ top: rupturePoint ? 30 : 14, right: 30, left: 8, bottom: 4 }}>
-                    <CartesianGrid vertical={false} stroke="rgba(196, 255, 222, 0.08)" strokeDasharray="3 5" />
-                    <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: "#78877f", fontSize: 11 }} />
-                    <YAxis tickFormatter={(value) => number(Number(value))} axisLine={false} tickLine={false} tick={{ fill: "#78877f", fontSize: 11 }} width={60} />
+                    <CartesianGrid vertical={false} stroke="var(--chart-grid)" strokeDasharray="3 5" />
+                    <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: "var(--chart-axis)", fontSize: 11 }} />
+                    <YAxis tickFormatter={(value) => number(Number(value))} axisLine={false} tickLine={false} tick={{ fill: "var(--chart-axis)", fontSize: 11 }} width={60} />
                     <Tooltip content={<ProjectionTooltip unit={active.unit} />} />
-                    <ReferenceLine y={0} stroke="rgba(255, 255, 255, 0.18)" strokeDasharray="3 5" />
+                    <ReferenceLine y={0} stroke="var(--chart-zero)" strokeDasharray="3 5" />
                     {ruptureRanges.map((range, index) => (
                       <ReferenceArea
                         key={`rupture-range-${index}-${range.start}`}
@@ -768,7 +768,7 @@ export default function Future() {
                             ? `Ruptura ${index + 1} · ${point.day}`
                             : `Ruptura ${point.day}`,
                           position: index % 2 === 0 ? "insideTopRight" : "insideBottomRight",
-                          fill: "#fda4af",
+                          fill: "var(--chart-risk-label)",
                           fontSize: 11,
                         }}
                       />
@@ -789,7 +789,7 @@ export default function Future() {
                             cy={cy}
                             r={5}
                             fill="#fbbf24"
-                            stroke="#06100a"
+                            stroke="var(--chart-dot-stroke)"
                             strokeWidth={2}
                           />
                         );
@@ -816,7 +816,7 @@ export default function Future() {
                             cy={cy}
                             r={isRupture ? 5 : 3}
                             fill={isRupture ? "#fb7185" : "#34d399"}
-                            stroke="#06100a"
+                            stroke="var(--chart-dot-stroke)"
                             strokeWidth={2}
                           />
                         );

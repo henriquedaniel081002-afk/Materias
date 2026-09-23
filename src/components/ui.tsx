@@ -685,12 +685,12 @@ export function Detail({
   );
 }
 export const tooltipStyle = {
-  background: "rgba(8, 14, 10, 0.97)",
-  border: "1px solid rgba(196, 255, 222, 0.16)",
+  background: "var(--chart-tooltip-bg)",
+  border: "1px solid var(--chart-tooltip-border)",
   borderRadius: 12,
-  color: "#f5f8f6",
+  color: "var(--chart-tooltip-text)",
   fontSize: 12,
-  boxShadow: "0 18px 48px rgba(0, 0, 0, 0.42)",
+  boxShadow: "var(--chart-tooltip-shadow)",
   backdropFilter: "blur(12px)",
 };
 

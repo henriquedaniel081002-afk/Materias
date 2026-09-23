@@ -10,15 +10,17 @@ import {
   X,
   UploadCloud,
   TriangleAlert,
+  Settings,
 } from "lucide-react";
 import Daily from "./pages/Daily";
 import Future from "./pages/Future";
 import ImportPage from "./pages/Import";
+import SettingsPage, { type Theme } from "./pages/Settings";
 import { LoadingSkeleton } from "./components/ui";
 import { useData } from "./context/DataContext";
 import { dateRangeLabel } from "./services/calculations";
 
-type Page = "daily" | "future" | "import";
+type Page = "daily" | "future" | "import" | "settings";
 
 const pageCopy: Record<Page, { title: string; eyebrow: string; description: string }> = {
   daily: {
@@ -36,6 +38,11 @@ const pageCopy: Record<Page, { title: string; eyebrow: string; description: stri
     eyebrow: "ATUALIZAÇÃO DA BASE",
     description: "Atualize Plano, Apontamento, Ficha Técnica, Estoque e FOLLOW UP diretamente no Supabase.",
   },
+  settings: {
+    title: "Configurações",
+    eyebrow: "PREFERÊNCIAS DA INTERFACE",
+    description: "Personalize a aparência do sistema sem alterar dados ou regras de negócio.",
+  },
 };
 
 export default function App() {
@@ -43,6 +50,18 @@ export default function App() {
   const [page, setPage] = useState<Page>("daily");
   const [collapsed, setCollapsed] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const [theme, setTheme] = useState<Theme>(() => {
+    const stored = window.localStorage.getItem("itam-materiais-theme");
+    const initial: Theme = stored === "light" ? "light" : "dark";
+    document.documentElement.dataset.theme = initial;
+    return initial;
+  });
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    window.localStorage.setItem("itam-materiais-theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
@@ -97,8 +116,9 @@ export default function App() {
   const period = useMemo(() => {
     if (page === "daily") return dateRangeLabel(daily.map((row) => row.date));
     if (page === "future") return dateRangeLabel(data.plano.map((row) => row.data));
-    return "5 tabelas operacionais";
-  }, [page, daily, data.plano]);
+    if (page === "import") return "5 tabelas operacionais";
+    return theme === "dark" ? "Tema escuro" : "Tema claro";
+  }, [page, daily, data.plano, theme]);
 
   const copy = pageCopy[page];
 
@@ -153,6 +173,16 @@ export default function App() {
             <span>Importações</span>
             <ChevronRight size={14} className="nav-arrow" />
           </button>
+          <button
+            title="Configurações"
+            aria-current={page === "settings" ? "page" : undefined}
+            className={page === "settings" ? "active" : ""}
+            onClick={() => navigate("settings")}
+          >
+            <Settings size={19} />
+            <span>Configurações</span>
+            <ChevronRight size={14} className="nav-arrow" />
+          </button>
         </nav>
 
         <div className="sidebar-bottom">
@@ -198,12 +228,12 @@ export default function App() {
               <p>{copy.description}</p>
             </div>
             <div className="period-context">
-              <span>{page === "import" ? "ESTRUTURA" : "PERÍODO DA BASE"}</span>
+              <span>{page === "import" ? "ESTRUTURA" : page === "settings" ? "APARÊNCIA" : "PERÍODO DA BASE"}</span>
               <strong>{period}</strong>
             </div>
           </header>
 
-          {error && page !== "import" && (
+          {error && page !== "import" && page !== "settings" && (
             <div className="data-error" role="alert">
               <TriangleAlert size={17} />
               <div>
@@ -214,13 +244,14 @@ export default function App() {
             </div>
           )}
 
-          {loading && page !== "import" ? (
+          {loading && page !== "import" && page !== "settings" ? (
             <LoadingSkeleton />
           ) : (
             <>
               <div hidden={page !== "daily"}><Daily /></div>
               <div hidden={page !== "future"}><Future /></div>
               <div hidden={page !== "import"}><ImportPage /></div>
+              <div hidden={page !== "settings"}><SettingsPage theme={theme} onThemeChange={setTheme} /></div>
             </>
           )}
 
