@@ -42,7 +42,7 @@ export interface FollowUpRow {
   un: string | null;
   numero_pedido: string | null;
   qtd_a_faturar: number | null;
-  qtd_faturada: number;
+  qtd_faturada: number | null;
   mes_atendimento: string | null;
   prev_entrega: string | null;
   dt_ent_transp: string | null;

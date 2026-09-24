@@ -145,7 +145,11 @@ export async function loadDatabase(): Promise<DatabaseData> {
       (r) => numeric(r, ["qtd_estoque"]) as unknown as EstoqueRow,
     ),
     followUp: followUpRaw.map((r) => {
-      const parsed = numeric(r, ["qtd_faturada"]);
+      const parsed = { ...r } as Record<string, unknown>;
+      const billed = r.qtd_faturada === null || r.qtd_faturada === undefined
+        ? null
+        : Number(r.qtd_faturada);
+      parsed.qtd_faturada = billed !== null && Number.isFinite(billed) ? billed : null;
       parsed.qtd_pedido = r.qtd_pedido === null || r.qtd_pedido === undefined
         ? null
         : Number(r.qtd_pedido);

@@ -673,10 +673,10 @@ export function parseFollowUpRows(
       return parsed;
     };
 
-    const billedForProjection = hasBilled && !invalidDelivery && !pastOrTodayDelivery ? billedParsed : 0;
+    const billedForProjection = hasBilled && !invalidDelivery && !pastOrTodayDelivery ? billedParsed : null;
     const deliveryForProjection = hasBilled && !invalidDelivery && !pastOrTodayDelivery ? delivery : null;
 
-    if (billedForProjection > 0) {
+    if (billedForProjection !== null && billedForProjection > 0) {
       if (deliveryForProjection) metrics.linhas_com_previsao_futura += 1;
       else metrics.linhas_faturadas_sem_previsao += 1;
     }
