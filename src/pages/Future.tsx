@@ -122,8 +122,16 @@ function Composition({
 
   return (
     <div className="composition-with-op">
-      <div className="table-scroll composition">
+      <div className="table-scroll composition need-composition-table">
         <table>
+          <colgroup>
+            <col className="need-col-date" />
+            <col className="need-col-reference" />
+            <col className="need-col-sector" />
+            <col className="need-col-planned" />
+            <col className="need-col-unit" />
+            <col className="need-col-total" />
+          </colgroup>
           <thead>
             <tr>
               {["Data", "Referência", "Setor", "Qtd. planejada", "Qtd./unidade", "Necessidade"].map((label) => (
@@ -699,45 +707,30 @@ export default function Future() {
                   {number(openPurchaseOrdersTotal)} {active.unit}
                 </strong>
               </div>
-              <div className="table-scroll composition followup-open-table">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Nº pedido</th>
-                      <th>Qtd. à faturar</th>
-                      <th>Saldo</th>
-                      <th>Mês para atendimento</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {openPurchaseOrders.map(({ row, hasBilled, pending }, index) => (
-                      <tr key={[row.cod_mp, row.numero_pedido, row.qtd_a_faturar, row.qtd_faturada, row.mes_atendimento, index].join("¦")}>
-                        <td className="mono"><strong>{row.numero_pedido}</strong></td>
-                        <td className="numeric">
-                          {!hasBilled ? (
-                            <strong>{number(Number(row.qtd_a_faturar))} {active.unit}</strong>
-                          ) : (
-                            <span className="muted">—</span>
-                          )}
-                        </td>
-                        <td className="numeric">
-                          {hasBilled ? (
-                            <strong>{number(pending)} {active.unit}</strong>
-                          ) : (
-                            <span className="muted">—</span>
-                          )}
-                        </td>
-                        <td>
-                          {!hasBilled ? (
-                            row.mes_atendimento || <span className="muted">Não informado</span>
-                          ) : (
-                            <span className="muted">—</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="followup-open-cards">
+                {openPurchaseOrders.map(({ row, hasBilled, pending }, index) => (
+                  <article
+                    className={`followup-open-card ${hasBilled ? "has-billed" : "awaiting-billing"}`}
+                    key={[row.cod_mp, row.numero_pedido, row.qtd_a_faturar, row.qtd_faturada, row.mes_atendimento, index].join("¦")}
+                  >
+                    <div className="followup-open-card-head">
+                      <span>Nº PEDIDO</span>
+                      <strong className="mono">{row.numero_pedido}</strong>
+                    </div>
+                    <div className="followup-open-card-body">
+                      <div className="followup-open-card-value">
+                        <span>{hasBilled ? "SALDO PENDENTE" : "QTD. À FATURAR"}</span>
+                        <strong>{number(hasBilled ? pending : Number(row.qtd_a_faturar))} <small>{active.unit}</small></strong>
+                      </div>
+                      {!hasBilled && (
+                        <div className="followup-open-card-meta">
+                          <span>MÊS PARA ATENDIMENTO</span>
+                          <strong>{row.mes_atendimento || "Não informado"}</strong>
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                ))}
               </div>
             </section>
           )}

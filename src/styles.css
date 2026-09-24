@@ -6806,3 +6806,164 @@ tbody tr:hover {
   background: rgba(13, 148, 136, 0.08);
   border-color: rgba(13, 116, 103, 0.20);
 }
+
+/* ========================================================================== */
+/* Ajuste visual do detalhamento de Necessidade Futura                        */
+/* Somente apresentação: nenhuma regra, cálculo ou integração é alterada.     */
+/* ========================================================================== */
+.future-analysis-modal .need-composition-table table {
+  width: 100%;
+  min-width: 760px;
+  table-layout: fixed;
+}
+
+.future-analysis-modal .need-composition-table .need-col-date { width: 15%; }
+.future-analysis-modal .need-composition-table .need-col-reference { width: 18%; }
+.future-analysis-modal .need-composition-table .need-col-sector { width: 19%; }
+.future-analysis-modal .need-composition-table .need-col-planned { width: 16%; }
+.future-analysis-modal .need-composition-table .need-col-unit { width: 16%; }
+.future-analysis-modal .need-composition-table .need-col-total { width: 16%; }
+
+.future-analysis-modal .need-composition-table th,
+.future-analysis-modal .need-composition-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.future-analysis-modal .need-composition-table th:nth-child(n+4),
+.future-analysis-modal .need-composition-table td:nth-child(n+4) {
+  text-align: right;
+}
+
+.future-analysis-modal .followup-open-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 320px));
+  gap: 10px;
+  margin-top: 12px;
+  align-items: stretch;
+}
+
+.future-analysis-modal .followup-open-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(94, 234, 212, 0.16);
+  border-radius: 12px;
+  background: rgba(4, 15, 12, 0.55);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.018);
+}
+
+.future-analysis-modal .followup-open-card.has-billed {
+  border-color: rgba(96, 165, 250, 0.18);
+}
+
+.future-analysis-modal .followup-open-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.18);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.future-analysis-modal .followup-open-card-head span,
+.future-analysis-modal .followup-open-card-value span,
+.future-analysis-modal .followup-open-card-meta span {
+  color: #7f9187;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.future-analysis-modal .followup-open-card-head strong {
+  color: #dce7e1;
+  font-size: 11px;
+}
+
+.future-analysis-modal .followup-open-card-body {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.future-analysis-modal .followup-open-card-value,
+.future-analysis-modal .followup-open-card-meta {
+  display: grid;
+  gap: 5px;
+}
+
+.future-analysis-modal .followup-open-card-value strong {
+  color: #8ee7d7;
+  font-size: 16px;
+  line-height: 1.15;
+}
+
+.future-analysis-modal .followup-open-card.has-billed .followup-open-card-value strong {
+  color: #93c5fd;
+}
+
+.future-analysis-modal .followup-open-card-value small {
+  font-size: 10px;
+  font-weight: 750;
+  color: inherit;
+}
+
+.future-analysis-modal .followup-open-card-meta {
+  padding-top: 9px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.future-analysis-modal .followup-open-card-meta strong {
+  color: #c8d2cc;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+:root[data-theme="light"] .future-analysis-modal .followup-open-card {
+  background: #ffffff;
+  border-color: rgba(13, 116, 103, 0.20);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+:root[data-theme="light"] .future-analysis-modal .followup-open-card.has-billed {
+  border-color: rgba(37, 99, 235, 0.20);
+}
+
+:root[data-theme="light"] .future-analysis-modal .followup-open-card-head {
+  background: #f7faf9;
+  border-bottom-color: #e4ebe7;
+}
+
+:root[data-theme="light"] .future-analysis-modal .followup-open-card-head span,
+:root[data-theme="light"] .future-analysis-modal .followup-open-card-value span,
+:root[data-theme="light"] .future-analysis-modal .followup-open-card-meta span {
+  color: #475569;
+}
+
+:root[data-theme="light"] .future-analysis-modal .followup-open-card-head strong,
+:root[data-theme="light"] .future-analysis-modal .followup-open-card-meta strong {
+  color: #111827;
+}
+
+:root[data-theme="light"] .future-analysis-modal .followup-open-card-value strong {
+  color: #0f766e;
+}
+
+:root[data-theme="light"] .future-analysis-modal .followup-open-card.has-billed .followup-open-card-value strong {
+  color: #1d4ed8;
+}
+
+:root[data-theme="light"] .future-analysis-modal .followup-open-card-meta {
+  border-top-color: #e5e7eb;
+}
+
+@media (max-width: 720px) {
+  .future-analysis-modal .followup-open-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .future-analysis-modal .followup-open-card {
+    width: 100%;
+  }
+}
