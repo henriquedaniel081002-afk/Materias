@@ -221,8 +221,8 @@ export default function ImportPage() {
       const ficha = parsed.ficha.metrics || {};
       const report = [
         `ESTOQUE — lidas: ${inventory.linhas_lidas || 0} · válidas: ${inventory.linhas_validas || 0} · importadas: ${inventory.linhas_importadas || 0} · ignoradas: ${inventory.linhas_ignoradas || 0} · erros: ${inventory.erros || 0}`,
-        `FOLLOW UP — lidas: ${followUp.linhas_lidas || 0} · faturadas: ${followUp.linhas_faturadas || 0} · previsão futura: ${followUp.linhas_com_previsao_futura || 0} · faturadas sem previsão: ${followUp.linhas_faturadas_sem_previsao || 0}`,
-        `FOLLOW UP — ignoradas por previsão até hoje: ${followUp.ignoradas_previsao_ate_hoje || 0} · sem QTD FATURADA: ${followUp.ignoradas_sem_qtd_faturada || 0} · erros: ${followUp.erros || 0}`,
+        `FOLLOW UP — lidas: ${followUp.linhas_lidas || 0} · faturadas: ${followUp.linhas_faturadas || 0} · pedidos em aberto: ${followUp.linhas_pedidos_abertos || 0} · previsão futura: ${followUp.linhas_com_previsao_futura || 0} · faturadas sem previsão: ${followUp.linhas_faturadas_sem_previsao || 0}`,
+        `FOLLOW UP — faturadas desconsideradas por previsão até hoje: ${followUp.ignoradas_previsao_ate_hoje || 0} · sem faturamento/pedido aberto: ${followUp.ignoradas_sem_qtd_faturada || 0} · erros: ${followUp.erros || 0}`,
         `FICHA TÉCNICA — importadas: ${ficha.linhas_importadas || 0} · ignoradas fora do Plano: ${ficha.linhas_ignoradas_fora_plano || 0} linha(s) / ${ficha.referencias_ignoradas_fora_plano || 0} referência(s)`,
       ];
       setTask("bundle", { progress: 5, warnings });

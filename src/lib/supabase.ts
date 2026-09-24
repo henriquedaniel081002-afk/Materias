@@ -120,7 +120,7 @@ export async function loadDatabase(): Promise<DatabaseData> {
     ),
     fetchAll<Record<string, unknown>>(
       "follow_up",
-      "cod_mp,descricao_mp,qtd_pedido,un,qtd_faturada,prev_entrega,dt_ent_transp,dt_saida_transp",
+      "cod_mp,descricao_mp,qtd_pedido,un,numero_pedido,qtd_a_faturar,qtd_faturada,mes_atendimento,prev_entrega,dt_ent_transp,dt_saida_transp",
     ),
   ]);
 
@@ -149,6 +149,9 @@ export async function loadDatabase(): Promise<DatabaseData> {
       parsed.qtd_pedido = r.qtd_pedido === null || r.qtd_pedido === undefined
         ? null
         : Number(r.qtd_pedido);
+      parsed.qtd_a_faturar = r.qtd_a_faturar === null || r.qtd_a_faturar === undefined
+        ? null
+        : Number(r.qtd_a_faturar);
       return parsed as unknown as FollowUpRow;
     }),
   };

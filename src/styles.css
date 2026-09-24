@@ -2840,6 +2840,22 @@ main:focus {
 .future-analysis-modal .followup-tracking-table table {
   min-width: 720px;
 }
+.future-analysis-modal .followup-open-section {
+  border-color: #315b52;
+  background: #141b19;
+}
+.future-analysis-modal .followup-open-total {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border: 1px solid #3b7064;
+  border-radius: 8px;
+  background: rgba(45, 212, 191, 0.08);
+  color: #8ee7d7;
+  font-size: 12px;
+}
+.future-analysis-modal .followup-open-table table {
+  min-width: 620px;
+}
 .future-analysis-modal .followup-no-date {
   color: #f3c96a;
   font-weight: 650;
@@ -6777,4 +6793,16 @@ tbody tr:hover {
 :root[data-theme="light"] .analysis-projection-chart .recharts-cartesian-axis-tick-value,
 :root[data-theme="light"] .analysis-projection-chart .recharts-label-list text {
   fill: #334155 !important;
+}
+
+
+/* Pedidos do FOLLOW UP ainda a faturar: informação sem efeito na projeção. */
+:root[data-theme="light"] .future-analysis-modal .followup-open-section {
+  background: rgba(13, 148, 136, 0.055);
+  border-color: rgba(13, 116, 103, 0.18);
+}
+:root[data-theme="light"] .future-analysis-modal .followup-open-total {
+  color: #0f766e;
+  background: rgba(13, 148, 136, 0.08);
+  border-color: rgba(13, 116, 103, 0.20);
 }

@@ -40,7 +40,10 @@ export interface FollowUpRow {
   descricao_mp: string | null;
   qtd_pedido: number | null;
   un: string | null;
+  numero_pedido: string | null;
+  qtd_a_faturar: number | null;
   qtd_faturada: number;
+  mes_atendimento: string | null;
   prev_entrega: string | null;
   dt_ent_transp: string | null;
   dt_saida_transp: string | null;
@@ -151,6 +154,7 @@ export interface ImportResult<T> {
 export interface FollowUpImportMetrics {
   linhas_lidas: number;
   linhas_faturadas: number;
+  linhas_pedidos_abertos: number;
   linhas_com_previsao_futura: number;
   linhas_faturadas_sem_previsao: number;
   ignoradas_previsao_ate_hoje: number;

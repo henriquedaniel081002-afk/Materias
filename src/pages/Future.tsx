@@ -404,6 +404,27 @@ export default function Future() {
     0,
   );
 
+  // Pedidos ainda a faturar são informativos. Eles não compõem receipts,
+  // incoming, projection ou saldo projetado; apenas aparecem no detalhamento.
+  const openPurchaseOrders = active
+    ? data.followUp
+        .filter(
+          (row) =>
+            normalized(row.cod_mp) === normalized(active.code) &&
+            normalizeUnit(row.un) === active.unit &&
+            Boolean(row.numero_pedido) &&
+            Number(row.qtd_a_faturar) > 0,
+        )
+        .sort((a, b) =>
+          (a.mes_atendimento || "").localeCompare(b.mes_atendimento || "", "pt-BR") ||
+          (a.numero_pedido || "").localeCompare(b.numero_pedido || "", "pt-BR", { numeric: true }),
+        )
+    : [];
+  const openPurchaseOrdersTotal = openPurchaseOrders.reduce(
+    (sum, row) => sum + (Number(row.qtd_a_faturar) || 0),
+    0,
+  );
+
   const shortageOnlyWithoutDate =
     !!active &&
     active.balance !== null &&
@@ -652,6 +673,41 @@ export default function Future() {
               )}
             </div>
           </div>
+
+          {openPurchaseOrders.length > 0 && (
+            <section className="analysis-modal-section followup-open-section">
+              <div className="analysis-section-head">
+                <div>
+                  <span>PEDIDOS A FATURAR</span>
+                  <h3>Material com pedido ainda pendente de faturamento</h3>
+                  <p>Informativo apenas: a QTD À FATURAR não entra no estoque projetado, saldo, cobertura ou ruptura.</p>
+                </div>
+                <strong className="followup-open-total">
+                  {number(openPurchaseOrdersTotal)} {active.unit}
+                </strong>
+              </div>
+              <div className="table-scroll composition followup-open-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nº pedido</th>
+                      <th>Qtd. à faturar</th>
+                      <th>Mês para atendimento</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {openPurchaseOrders.map((row, index) => (
+                      <tr key={[row.cod_mp, row.numero_pedido, row.qtd_a_faturar, row.mes_atendimento, index].join("¦")}>
+                        <td className="mono"><strong>{row.numero_pedido}</strong></td>
+                        <td className="numeric"><strong>{number(Number(row.qtd_a_faturar))} {active.unit}</strong></td>
+                        <td>{row.mes_atendimento || <span className="muted">Não informado</span>}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
 
           {undatedBilledReceipts.length > 0 && (
             <section className="analysis-modal-section followup-undated-section">

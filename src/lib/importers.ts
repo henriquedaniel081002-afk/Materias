@@ -581,11 +581,26 @@ export function parseFollowUpRows(
   const descIndex = headerIndex(headerRow, ["DESCRIÇÃO ITEM"]);
   const orderQtyIndex = headerIndex(headerRow, ["QTD"]);
   const unitIndex = headerIndex(headerRow, ["UN"]);
+  const purchaseOrderIndex = headerIndex(headerRow, ["Nº PEDIDO", "N° PEDIDO", "NUMERO PEDIDO", "N PEDIDO"]);
+  const toBillIndex = headerIndex(headerRow, ["QTD À FATURAR", "QTD A FATURAR"]);
   const billedIndex = headerIndex(headerRow, ["QTD FATURADA"]);
+  const serviceMonthIndex = headerIndex(headerRow, ["MÊS PARA ATENDIMENTO", "MES PARA ATENDIMENTO"]);
   const deliveryIndex = headerIndex(headerRow, ["PREV ENTREGA"]);
   const carrierEntryIndex = headerIndex(headerRow, ["DT ENT TRANSP"]);
   const carrierExitIndex = headerIndex(headerRow, ["DT SAIDA TRANSP"]);
-  if ([codeIndex, descIndex, orderQtyIndex, unitIndex, billedIndex, deliveryIndex].some((index) => index < 0)) {
+  if (
+    [
+      codeIndex,
+      descIndex,
+      orderQtyIndex,
+      unitIndex,
+      purchaseOrderIndex,
+      toBillIndex,
+      billedIndex,
+      serviceMonthIndex,
+      deliveryIndex,
+    ].some((index) => index < 0)
+  ) {
     throw new Error("Não encontrei as colunas do FOLLOW UP neste arquivo.");
   }
   const dataRows = rows.slice(1).filter(hasValues);
@@ -593,6 +608,7 @@ export function parseFollowUpRows(
   const metrics: FollowUpImportMetrics = {
     linhas_lidas: dataRows.length,
     linhas_faturadas: 0,
+    linhas_pedidos_abertos: 0,
     linhas_com_previsao_futura: 0,
     linhas_faturadas_sem_previsao: 0,
     ignoradas_previsao_ate_hoje: 0,
@@ -602,31 +618,49 @@ export function parseFollowUpRows(
 
   dataRows.forEach((row) => {
     const codMp = code(row[codeIndex]);
-    const billedRaw = row[billedIndex];
-    const billed = quantity(billedRaw);
     if (!codMp) {
       metrics.erros += 1;
       return;
     }
-    if (text(billedRaw) === "" || billed === 0) {
+
+    const numeroPedido = code(row[purchaseOrderIndex]) || null;
+    const toBillRaw = row[toBillIndex];
+    const toBill = quantity(toBillRaw);
+    const hasOpenOrder = Boolean(numeroPedido) && Number.isFinite(toBill) && toBill > 0;
+    if (hasOpenOrder) metrics.linhas_pedidos_abertos += 1;
+    if (text(toBillRaw) !== "" && (!Number.isFinite(toBill) || toBill < 0)) metrics.erros += 1;
+
+    const billedRaw = row[billedIndex];
+    const billedParsed = quantity(billedRaw);
+    const hasBilled = text(billedRaw) !== "" && Number.isFinite(billedParsed) && billedParsed > 0;
+    if (text(billedRaw) !== "" && (!Number.isFinite(billedParsed) || billedParsed < 0)) {
+      metrics.erros += 1;
+    }
+
+    // Mantém a regra antiga para entradas faturadas, mas preserva também
+    // pedidos em aberto para exibição informativa no detalhamento do material.
+    if (!hasBilled && !hasOpenOrder) {
       metrics.ignoradas_sem_qtd_faturada += 1;
       return;
     }
-    if (!Number.isFinite(billed) || billed < 0) {
-      metrics.erros += 1;
-      return;
-    }
-    metrics.linhas_faturadas += 1;
+
+    if (hasBilled) metrics.linhas_faturadas += 1;
 
     const deliveryRaw = row[deliveryIndex];
     const delivery = parseDate(deliveryRaw);
-    if (text(deliveryRaw) !== "" && !delivery) {
+    const invalidDelivery = text(deliveryRaw) !== "" && !delivery;
+    if (invalidDelivery) {
       metrics.erros += 1;
-      return;
+      if (hasBilled && !hasOpenOrder) return;
     }
-    if (delivery && delivery <= today) {
+
+    const pastOrTodayDelivery = Boolean(delivery && delivery <= today);
+    if (hasBilled && pastOrTodayDelivery) {
       metrics.ignoradas_previsao_ate_hoje += 1;
-      return;
+      // Antes, a linha inteira era descartada. Se houver pedido em aberto,
+      // preservamos somente a informação do pedido e neutralizamos a parcela
+      // faturada para que ela continue fora da projeção, como na regra anterior.
+      if (!hasOpenOrder) return;
     }
 
     const orderQtyRaw = row[orderQtyIndex];
@@ -639,16 +673,24 @@ export function parseFollowUpRows(
       return parsed;
     };
 
-    if (delivery) metrics.linhas_com_previsao_futura += 1;
-    else metrics.linhas_faturadas_sem_previsao += 1;
+    const billedForProjection = hasBilled && !invalidDelivery && !pastOrTodayDelivery ? billedParsed : 0;
+    const deliveryForProjection = hasBilled && !invalidDelivery && !pastOrTodayDelivery ? delivery : null;
+
+    if (billedForProjection > 0) {
+      if (deliveryForProjection) metrics.linhas_com_previsao_futura += 1;
+      else metrics.linhas_faturadas_sem_previsao += 1;
+    }
 
     result.push({
       cod_mp: codMp,
       descricao_mp: text(row[descIndex]) || null,
       qtd_pedido: Number.isFinite(orderQty) && orderQty >= 0 ? orderQty : null,
       un: text(row[unitIndex]).toUpperCase() || null,
-      qtd_faturada: billed,
-      prev_entrega: delivery,
+      numero_pedido: numeroPedido,
+      qtd_a_faturar: Number.isFinite(toBill) && toBill >= 0 ? toBill : null,
+      qtd_faturada: billedForProjection,
+      mes_atendimento: text(row[serviceMonthIndex]) || null,
+      prev_entrega: deliveryForProjection,
       dt_ent_transp: carrierEntryIndex >= 0 ? parseOptionalDate(row[carrierEntryIndex]) : null,
       dt_saida_transp: carrierExitIndex >= 0 ? parseOptionalDate(row[carrierExitIndex]) : null,
     });
@@ -659,10 +701,10 @@ export function parseFollowUpRows(
       ? `${metrics.linhas_faturadas_sem_previsao} linha(s) faturada(s) sem previsão foram mantidas apenas para acompanhamento.`
       : "",
     metrics.ignoradas_previsao_ate_hoje
-      ? `${metrics.ignoradas_previsao_ate_hoje} linha(s) com PREV ENTREGA menor ou igual a ${today} foram ignoradas para evitar duplicidade no estoque atual.`
+      ? `${metrics.ignoradas_previsao_ate_hoje} linha(s) com PREV ENTREGA menor ou igual a ${today} foram desconsideradas como entrada para evitar duplicidade no estoque atual.`
       : "",
     metrics.ignoradas_sem_qtd_faturada
-      ? `${metrics.ignoradas_sem_qtd_faturada} linha(s) sem QTD FATURADA positiva foram ignoradas.`
+      ? `${metrics.ignoradas_sem_qtd_faturada} linha(s) sem QTD FATURADA positiva e sem pedido em aberto foram ignoradas.`
       : "",
     metrics.erros ? `${metrics.erros} erro(s) de código, quantidade ou data foram identificados.` : "",
   ].filter(Boolean);
@@ -678,7 +720,17 @@ export async function parseFollowUp(
   const found = findSheetWithHeader(
     xlsx,
     workbook,
-    [["COD ITEM"], ["DESCRIÇÃO ITEM"], ["QTD"], ["UN"], ["QTD FATURADA"], ["PREV ENTREGA"]],
+    [
+      ["COD ITEM"],
+      ["DESCRIÇÃO ITEM"],
+      ["QTD"],
+      ["UN"],
+      ["Nº PEDIDO", "N° PEDIDO", "NUMERO PEDIDO", "N PEDIDO"],
+      ["QTD À FATURAR", "QTD A FATURAR"],
+      ["QTD FATURADA"],
+      ["MÊS PARA ATENDIMENTO", "MES PARA ATENDIMENTO"],
+      ["PREV ENTREGA"],
+    ],
     ["FOLLOW UP"],
   );
   if (!found) throw new Error("Não encontrei as colunas do FOLLOW UP neste arquivo.");
