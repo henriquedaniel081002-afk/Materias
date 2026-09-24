@@ -404,24 +404,37 @@ export default function Future() {
     0,
   );
 
-  // Pedidos ainda a faturar são informativos. Eles não compõem receipts,
-  // incoming, projection ou saldo projetado; apenas aparecem no detalhamento.
+  // Pedidos pendentes são apenas informativos e nunca compõem receipts, incoming,
+  // projection ou saldo projetado. Sem faturamento, exibimos QTD À FATURAR.
+  // Quando já existe QTD FATURADA, a pendência visual passa a ser somente o SALDO
+  // (QTD À FATURAR - QTD FATURADA), evitando mostrar novamente a quantidade original.
   const openPurchaseOrders = active
     ? data.followUp
         .filter(
           (row) =>
             normalized(row.cod_mp) === normalized(active.code) &&
             normalizeUnit(row.un) === active.unit &&
-            Boolean(row.numero_pedido) &&
-            Number(row.qtd_a_faturar) > 0,
+            Boolean(row.numero_pedido),
         )
+        .map((row) => {
+          const toInvoice = Number(row.qtd_a_faturar) || 0;
+          const billed = Number(row.qtd_faturada) || 0;
+          const hasBilled = billed > 0;
+          const pending = hasBilled ? Math.max(toInvoice - billed, 0) : Math.max(toInvoice, 0);
+
+          return { row, hasBilled, pending };
+        })
+        .filter(({ pending }) => pending > 0)
         .sort((a, b) =>
-          (a.mes_atendimento || "").localeCompare(b.mes_atendimento || "", "pt-BR") ||
-          (a.numero_pedido || "").localeCompare(b.numero_pedido || "", "pt-BR", { numeric: true }),
+          (!a.hasBilled ? a.row.mes_atendimento || "" : "").localeCompare(
+            !b.hasBilled ? b.row.mes_atendimento || "" : "",
+            "pt-BR",
+          ) ||
+          (a.row.numero_pedido || "").localeCompare(b.row.numero_pedido || "", "pt-BR", { numeric: true }),
         )
     : [];
   const openPurchaseOrdersTotal = openPurchaseOrders.reduce(
-    (sum, row) => sum + (Number(row.qtd_a_faturar) || 0),
+    (sum, item) => sum + item.pending,
     0,
   );
 
@@ -678,9 +691,9 @@ export default function Future() {
             <section className="analysis-modal-section followup-open-section">
               <div className="analysis-section-head">
                 <div>
-                  <span>PEDIDOS A FATURAR</span>
-                  <h3>Material com pedido ainda pendente de faturamento</h3>
-                  <p>Informativo apenas: a QTD À FATURAR não entra no estoque projetado, saldo, cobertura ou ruptura.</p>
+                  <span>PEDIDOS PENDENTES</span>
+                  <h3>Material com quantidade ainda pendente</h3>
+                  <p>Sem faturamento, mostra QTD À FATURAR e mês de atendimento. Com faturamento, mostra apenas o SALDO pendente. Estes valores são informativos e não entram na projeção.</p>
                 </div>
                 <strong className="followup-open-total">
                   {number(openPurchaseOrdersTotal)} {active.unit}
@@ -692,15 +705,35 @@ export default function Future() {
                     <tr>
                       <th>Nº pedido</th>
                       <th>Qtd. à faturar</th>
+                      <th>Saldo</th>
                       <th>Mês para atendimento</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {openPurchaseOrders.map((row, index) => (
-                      <tr key={[row.cod_mp, row.numero_pedido, row.qtd_a_faturar, row.mes_atendimento, index].join("¦")}>
+                    {openPurchaseOrders.map(({ row, hasBilled, pending }, index) => (
+                      <tr key={[row.cod_mp, row.numero_pedido, row.qtd_a_faturar, row.qtd_faturada, row.mes_atendimento, index].join("¦")}>
                         <td className="mono"><strong>{row.numero_pedido}</strong></td>
-                        <td className="numeric"><strong>{number(Number(row.qtd_a_faturar))} {active.unit}</strong></td>
-                        <td>{row.mes_atendimento || <span className="muted">Não informado</span>}</td>
+                        <td className="numeric">
+                          {!hasBilled ? (
+                            <strong>{number(Number(row.qtd_a_faturar))} {active.unit}</strong>
+                          ) : (
+                            <span className="muted">—</span>
+                          )}
+                        </td>
+                        <td className="numeric">
+                          {hasBilled ? (
+                            <strong>{number(pending)} {active.unit}</strong>
+                          ) : (
+                            <span className="muted">—</span>
+                          )}
+                        </td>
+                        <td>
+                          {!hasBilled ? (
+                            row.mes_atendimento || <span className="muted">Não informado</span>
+                          ) : (
+                            <span className="muted">—</span>
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
